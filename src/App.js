@@ -18,6 +18,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import InvoiceList from "./components/Account/InvoiceList";
 import ViewInvoice from "./components/Account/ViewInvoice";
 import SideBar from "./components/Account/SideBar";
+import ManageProfile from "./components/Account/ManageProfile";
 
 function App() {
   return (
@@ -28,12 +29,12 @@ function App() {
             <Route exact path="/" element={<PrivateRoute />}>
               <Route
                 exact
-                path="/"
+                path="/compose"
                 element={<SideBar content={<Dashboard />} />}
               />
               <Route
                 exact
-                path="/all"
+                path="/"
                 element={<SideBar content={<InvoiceList />} />}
               />
               <Route
@@ -41,6 +42,10 @@ function App() {
                 element={<SideBar content={<ViewInvoice />} />}
               />
               <Route path="/update-profile" element={<UpdateProfile />} />
+              <Route
+                path="/manage-profile"
+                element={<SideBar content={<ManageProfile />} />}
+              />
             </Route>
 
             <Route path="/signup" element={<Signup />} />

@@ -90,22 +90,22 @@ export default function Dashboard() {
   };
 
   const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "Pen",
-      qty: 5,
-      rate: 5,
-      total: 25,
-      gst: 18,
-    },
-    {
-      id: 2,
-      name: "Book",
-      qty: 10,
-      rate: 20,
-      total: 200,
-      gst: 18,
-    },
+    // {
+    //   id: 1,
+    //   name: "Pen",
+    //   qty: 5,
+    //   rate: 5,
+    //   total: 25,
+    //   gst: 18,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Book",
+    //   qty: 10,
+    //   rate: 20,
+    //   total: 200,
+    //   gst: 18,
+    // },
   ]);
 
   const [imgSRC, setImgSRC] = useState(
@@ -226,6 +226,8 @@ export default function Dashboard() {
     handleGSTChange();
     handlePriceChange();
     return () => {
+      handleGSTChange();
+      handlePriceChange();
       console.log(getFileClick);
     };
   }, [items]);
@@ -355,6 +357,8 @@ export default function Dashboard() {
           setItems={setItems}
           setGSTTotal={setGSTTotal}
           handlePriceChange={handlePriceChange}
+          id={id}
+          setID={setID}
         />
         <button
           className="mt-6 bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 text-sm border border-gray-300 rounded shadow-sm"
@@ -509,6 +513,8 @@ const InvoiceTableData = ({
   setItems,
   setGSTTotal,
   handlePriceChange,
+  id,
+  setID,
 }) => {
   const handleDeleteItem = (id) => {
     // items.items.splice(id - 1, 1);
@@ -518,6 +524,7 @@ const InvoiceTableData = ({
     // console.log(items);
     handlePriceChange();
     setGSTTotal();
+    setID(--id);
   };
 
   useEffect(() => {
@@ -529,7 +536,6 @@ const InvoiceTableData = ({
   }, [items]);
 
   return (
-    // <></>
     <div>
       {items.map((item, i) => {
         return (
@@ -711,6 +717,10 @@ const Modal = ({
   };
 
   const handleAddItem = () => {
+    setTotal(parseFloat(singleItem.qty) * parseFloat(singleItem.rate));
+
+    singleItem.total = newTotal;
+
     if (
       !singleItem.name ||
       !singleItem.qty ||
@@ -722,7 +732,9 @@ const Modal = ({
       alert("Fill all the fields");
       return;
     }
-
+    console.log("Here");
+    handlePriceChange();
+    handleGSTChange();
     setTotal(parseFloat(singleItem.qty) * parseFloat(singleItem.rate));
 
     singleItem.total = newTotal;
@@ -733,8 +745,6 @@ const Modal = ({
       setItemsCount(items.length);
       console.log(items);
     }
-    handlePriceChange();
-    handleGSTChange();
 
     setSingleItem({ id: id, name: "", qty: 0, rate: 0, total: 0, gst: 18 });
   };
@@ -755,7 +765,10 @@ const Modal = ({
       ...val,
       ...updatedValue,
     }));
-  }, [singleItem.qty, singleItem.rate]);
+
+    handleGSTChange();
+    handlePriceChange();
+  }, [singleItem.qty, singleItem.rate, items]);
 
   return (
     <div
@@ -804,7 +817,8 @@ const Modal = ({
               <input
                 className="text-right mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                 id="inline-full-name"
-                type="text"
+                min={0}
+                type="number"
                 name="qty"
                 value={singleItem.qty}
                 onChange={(e) => {
@@ -820,7 +834,8 @@ const Modal = ({
               <input
                 className="text-right mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                 id="inline-full-name"
-                type="text"
+                min={0}
+                type="number"
                 name="rate"
                 value={singleItem.rate}
                 onChange={(e) => {
@@ -839,6 +854,7 @@ const Modal = ({
                 name="total"
                 type="text"
                 value={newTotal}
+                readOnly
               />
             </div>
           </div>

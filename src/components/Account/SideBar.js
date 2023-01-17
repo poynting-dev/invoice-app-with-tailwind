@@ -11,8 +11,9 @@ export default function SideBar({ content }) {
 
   return (
     <>
-      <div className="flex  antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+      <div className="sm:flex antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
         {/* <!-- Sidebar --> */}
+
         <div className="flex flex-shrink-0 transition-all">
           {isSidebarOpen && (
             <div
@@ -28,7 +29,7 @@ export default function SideBar({ content }) {
           {/* <!-- Mobile bottom bar --> */}
           <nav
             aria-label="Options"
-            className="fixed inset-x-0 bottom-0 flex flex-row-reverse items-center justify-between px-4 py-2 bg-white border-t border-indigo-100 sm:hidden shadow-t rounded-t-3xl"
+            className=" fixed inset-x-0 bottom-0 flex flex-row-reverse items-center justify-between px-4 py-2 bg-white border-t border-indigo-100 sm:hidden shadow-t rounded-t-3xl"
           >
             {/* <!-- Menu button --> */}
             <button
@@ -38,10 +39,10 @@ export default function SideBar({ content }) {
                   : (setIsSidebarOpen(true), setCurrentSidebarTab("linksTab"))
               }
               className={
-                isSidebarOpen && currentSidebarTab == "linksTab"
-                  ? "text-white bg-indigo-600"
-                  : "text-gray-500 bg-white" +
-                    "p-2 transition-colors rounded-lg shadow-md hover:bg-indigo-800 hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+                (isSidebarOpen && currentSidebarTab == "linksTab"
+                  ? "text-white bg-indigo-600 "
+                  : "text-gray-500 ") +
+                "p-2 transition-colors rounded-lg shadow-md hover:bg-indigo-800 hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
               }
             >
               <span className="sr-only">Toggle sidebar</span>
@@ -100,7 +101,7 @@ export default function SideBar({ content }) {
                   aria-label="user menu"
                 >
                   <a
-                    href="#"
+                    href="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
@@ -108,11 +109,11 @@ export default function SideBar({ content }) {
                   </a>
 
                   <a
-                    href="#"
+                    href="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
-                    Settings
+                    Manage Profile
                   </a>
 
                   <a
@@ -270,7 +271,7 @@ export default function SideBar({ content }) {
                   aria-label="user menu"
                 >
                   <a
-                    href="#"
+                    href="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
@@ -278,11 +279,11 @@ export default function SideBar({ content }) {
                   </a>
 
                   <a
-                    href="#"
+                    href="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
-                    Settings
+                    Manage Profile
                   </a>
 
                   <a
@@ -495,7 +496,7 @@ export default function SideBar({ content }) {
                 // x-transition:leave-start="translate-y-0 opacity-100"
                 // x-transition:leave-end="translate-y-full opacity-0"
                 //   @click.away="isSubHeaderOpen = false"
-                className="absolute flex items-center justify-between p-2 bg-white rounded-md shadow-lg sm:hidden top-16 left-5 right-5"
+                className="z-50 absolute flex items-center justify-between p-2 bg-white rounded-md shadow-lg sm:hidden top-16 left-5 right-5"
               >
                 {/* <!-- Seetings button --> */}
                 <button

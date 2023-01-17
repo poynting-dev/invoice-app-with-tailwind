@@ -23,7 +23,11 @@ export default function Signup() {
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
       updateProfile(getAuth().currentUser, {
-        displayName: "Jane Q. User",
+        displayName: "Akhil",
+        companyName: "SJ Jewellers",
+        companyAddress: "",
+        companyExtraInfo: "",
+        phoneNumber: "987654",
         photoURL: "https://picsum.photos/200/300",
       });
     } catch {

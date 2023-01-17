@@ -1,12 +1,6 @@
 import { DatePicker } from "react-responsive-datepicker";
 import "react-responsive-datepicker/dist/index.css";
-
-var options = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
+import { options } from "../../../global";
 
 export const InvoiceDate = ({
   invoiceDate,

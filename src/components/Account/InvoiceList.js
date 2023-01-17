@@ -5,35 +5,105 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-// import { useAuth } from '../contexts/AuthContext'
+import { ToolTip } from "./ToolTip";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function InvoiceList() {
   const [invoices, setInvoices] = useState([]);
+  const [tooltipStatus, setTooltipStatus] = useState(0);
 
-  //   const { currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    const invoiceRef = collection(db, "invoices");
-    const queryInvoices = query(invoiceRef);
+    const DBRef = collection(db, "invoices");
+    const queryInvoices = query(
+      DBRef,
+      where("userName", "==", currentUser.email)
+    );
     onSnapshot(queryInvoices, (snapshot) => {
-      const invoices = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setInvoices(invoices);
-      console.log(invoices);
-      console.log("Posts:" + JSON.stringify(invoices));
+      snapshot.docs.map((doc) => {
+        const invoiceRef = collection(
+          db,
+          "invoices/5eEacX2iOIJAzpJYBRtv/invoicesList"
+        );
+        const queryInvoicesList = query(invoiceRef);
+        onSnapshot(queryInvoicesList, (snapshot) => {
+          const invoices = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setInvoices(invoices);
+          console.log(invoices);
+        });
+
+        // console.log("Posts:" + JSON.stringify(invoices));
+      });
     });
+
+    // db.collection("invoices")
+    //   .doc("5eEacX2iOIJAzpJYBRtv")
+    //   .collection("invoicesList")
+    //   .doc("Dqsdrmo8T0qevnGoTIFK")
+    //   .get()
+    //   .then(function (doc) {
+    //     if (doc.exists) {
+    //       // console.log(doc.data());
+    //       let getData = doc.data();
+    //       console.log(getData);
+    //     } else {
+    //       // doc.data() will be undefined in this case
+    //       console.log("No such document!");
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting document:", error);
+    //   });
+
+    // const queryInvoices1 = query(invoiceRef1);
+    // onSnapshot(queryInvoices1, (snapshot) => {
+    //   const invoices = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   }));
+    //   // setInvoices(invoices);
+    //   console.log(invoices);
+    //   // console.log("Posts:" + JSON.stringify(invoices));
+    // });
   }, []);
 
-  return (
-    <div className="p-5 h-screen bg-gray-100">
-      <h1 className="text-xl mb-2">Your orders</h1>
+  const moveData = () => {
+    console.log(invoices);
+    var newTableRef = db
+      .collection("invoices")
+      .doc("5eEacX2iOIJAzpJYBRtv")
+      .collection("invoicesList");
 
-      <div className="overflow-auto rounded-lg shadow hidden md:block">
-        <table className="w-full">
+    var batch = db.batch();
+
+    invoices.forEach((doc) => {
+      batch.set(newTableRef.doc(), doc);
+    });
+    // Commit the batch
+    const result = batch.commit();
+    console.log(result);
+
+    console.log(currentUser);
+  };
+
+  return (
+    <div className="font-sans p-5 pt-0 h-full bg-gray-100">
+      <div className="md:flex md:justify-between">
+        <ComposeButton />
+        <h1 className="text-3xl mb-2 items-end flex place-content-center">
+          Your orders
+        </h1>
+      </div>
+
+      <div className="rounded-lg shadow hidden md:block">
+        <table className="w-full  relative">
           <thead className="bg-gray-50 border-b-2 border-gray-200">
             <tr>
               <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
@@ -56,7 +126,7 @@ export default function InvoiceList() {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 ">
             {invoices.length === 0 ? (
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                 No Invoices
@@ -71,181 +141,87 @@ export default function InvoiceList() {
                   dueDate,
                   invoiceDate,
                 }) => (
-                  <tr className="bg-white" key={id}>
-                    {/* ---------------------------------------------------------------------- */}
-
-                    <button
-                      data-popover-target="popover-company-profile"
-                      type="button"
-                      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  <tr className="bg-white " key={id}>
+                    <td
+                      className="p-3 text-sm text-gray-700 whitespace-nowrap"
+                      onMouseEnter={() => setTooltipStatus(id)}
+                      onMouseLeave={() => setTooltipStatus(0)}
                     >
-                      Company profile
-                    </button>
-                    <div
-                      // data-popover=""
-                      id="popover-company-profile"
-                      role="tooltip"
-                      // class="inline-block absolute  z-10 w-80 text-sm font-light text-gray-500 bg-white rounded-lg border border-gray-200 shadow-sm opacity-0 transition-opacity duration-300 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600"
-                      style={{
-                        position: "absolute",
-                        inset: "0px auto auto 0px",
-                        margin: " 0px",
-                        transform: "translate3d(0px, 2888px, 0px)",
-                      }}
-                      data-popper-reference-hidden=""
-                      data-popper-escaped=""
-                      data-popper-placement="bottom"
-                    >
-                      <div class="p-3">
-                        <div class="flex">
-                          <div class="mr-3 shrink-0">
-                            <a
-                              href="#"
-                              class="block p-2 bg-gray-100 rounded-lg dark:bg-gray-700"
-                            >
-                              <img
-                                class="w-8 h-8 rounded-full"
-                                src="https://flowbite.com/docs/images/logo.svg"
-                                alt="Flowbite logo"
-                              />
-                            </a>
-                          </div>
-                          <div>
-                            <p class="mb-1 text-base font-semibold leading-none text-gray-900 dark:text-white">
-                              <a href="#" class="hover:underline">
-                                Flowbite
-                              </a>
-                            </p>
-                            <p class="mb-3 text-sm font-normal">Tech company</p>
-                            <p class="mb-4 text-sm font-light">
-                              Open-source library of Tailwind CSS components and
-                              Figma design system.
-                            </p>
-                            <ul class="text-sm font-light">
-                              <li class="flex items-center mb-2">
-                                <span class="mr-1 font-semibold text-gray-400">
-                                  <svg
-                                    class="w-4 h-4"
-                                    aria-hidden="true"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      fill-rule="evenodd"
-                                      d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
-                                      clip-rule="evenodd"
-                                    ></path>
-                                  </svg>
-                                </span>
-                                <a
-                                  href="#"
-                                  class="text-blue-600 dark:text-blue-500 hover:underline"
-                                >
-                                  https://flowbite.com/
-                                </a>
-                              </li>
-                              <li class="flex items-start mb-2">
-                                <span class="mr-1 font-semibold text-gray-400">
-                                  <svg
-                                    class="w-4 h-4"
-                                    aria-hidden="true"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      fill-rule="evenodd"
-                                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                      clip-rule="evenodd"
-                                    ></path>
-                                  </svg>
-                                </span>
-                                <span>
-                                  4,567,346 people like this including 5 of your
-                                  friends
-                                </span>
-                              </li>
-                            </ul>
-                            <div class="flex mb-3 -space-x-3">
-                              <img
-                                class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
-                                src="/docs/images/people/profile-picture-5.jpg"
-                                alt=""
-                              />
-                              <img
-                                class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
-                                src="/docs/images/people/profile-picture-2.jpg"
-                                alt=""
-                              />
-                              <img
-                                class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
-                                src="/docs/images/people/profile-picture-3.jpg"
-                                alt=""
-                              />
-                              <a
-                                class="flex justify-center items-center w-8 h-8 text-xs font-medium text-white bg-gray-400 rounded-full border-2 border-white hover:bg-gray-500 dark:border-gray-800"
-                                href="#"
-                              >
-                                +3
-                              </a>
-                            </div>
-                            <div class="flex">
-                              <button
-                                type="button"
-                                class="inline-flex justify-center items-center py-2 px-5 mr-2 w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                              >
-                                <svg
-                                  class="mr-2 w-4 h-4"
-                                  aria-hidden="true"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                    clip-rule="evenodd"
-                                  ></path>
-                                </svg>
-                                Like page
-                              </button>
-                              <button
-                                class="inline-flex items-center py-2 px-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 shrink-0 focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                type="button"
-                              >
-                                <svg
-                                  class="w-4 h-4"
-                                  aria-hidden="true"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        data-popper-arrow=""
-                        style={{
-                          position: "absolute",
-                          left: " 0px",
-                          transform: "translate3d(0px, 0px, 0px)",
-                        }}
-                      ></div>
-                    </div>
-
-                    {/* ---------------------------------------------------------------------- */}
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <a
                         href={`/view/${id}`}
                         className="font-bold text-blue-500 hover:underline"
                       >
                         {invoiceNo ? invoiceNo : "No ID Exist"}
                       </a>
+
+                      {/*Code Block for indigo tooltip starts*/}
+                      <div className="relative my-28 md:my-0 ">
+                        {tooltipStatus == id && (
+                          <div
+                            role="tooltip"
+                            className="z-20 -mt-20 w-78 absolute transition duration-150 ease-in-out left-0 ml-24 shadow-lg bg-indigo-700 p-4 rounded"
+                          >
+                            <svg
+                              className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
+                              width="9px"
+                              height="16px"
+                              viewBox="0 0 9 16"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlnsXlink="http://www.w3.org/1999/xlink"
+                            >
+                              <g
+                                id="Page-1"
+                                stroke="none"
+                                strokeWidth={1}
+                                fill="none"
+                                fillRule="evenodd"
+                              >
+                                <g
+                                  id="Tooltips-"
+                                  transform="translate(-874.000000, -1029.000000)"
+                                  fill="#4c51bf"
+                                >
+                                  <g
+                                    id="Group-3-Copy-16"
+                                    transform="translate(850.000000, 975.000000)"
+                                  >
+                                    <g
+                                      id="Group-2"
+                                      transform="translate(24.000000, 0.000000)"
+                                    >
+                                      <polygon
+                                        id="Triangle"
+                                        transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
+                                        points="4.5 57.5 12.5 66.5 -3.5 66.5"
+                                      />
+                                    </g>
+                                  </g>
+                                </g>
+                              </g>
+                            </svg>
+                            <p className="text-sm font-bold text-white pb-1">
+                              Keep track of follow ups
+                            </p>
+                            <p className="text-xs leading-4 text-white pb-3">
+                              Reach out to more prospects at the right moment.
+                            </p>
+                            <div className="flex justify-between">
+                              <div className="flex items-center">
+                                <span className="text-xs font-bold text-white">
+                                  Step 1 of 4
+                                </span>
+                              </div>
+                              <div className="flex items-center">
+                                <button className="bg-white transition duration-150 ease-in-out focus:outline-none hover:bg-gray-200 rounded text-indigo-700 px-5 py-1 text-xs">
+                                  Next
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {/*Code Block for indigo tooltip ends*/}
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       {TotalWithGST}
@@ -273,37 +249,51 @@ export default function InvoiceList() {
       </div>
 
       {invoices.length === 0 ? (
-        <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-          No Invoices
-        </td>
+        <div className="p-3 text-sm text-gray-700 whitespace-nowrap ">
+          <div class="border border-blue-300 shadow rounded-md p-4 mx-auto">
+            <div class="animate-pulse flex space-x-4">
+              <div class="rounded-full bg-slate-700 h-10 w-10"></div>
+              <div class="flex-1 space-y-6 py-1">
+                <div class="h-2 bg-slate-700 rounded"></div>
+                <div class="space-y-3">
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="h-2 bg-slate-700 rounded col-span-2"></div>
+                    <div class="h-2 bg-slate-700 rounded col-span-1"></div>
+                  </div>
+                  <div class="h-2 bg-slate-700 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
         invoices.map(
           ({ id, invoiceNo, GSTTotal, TotalWithGST, dueDate, invoiceDate }) => (
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden"
+              className="grid grid-cols-1 mb-8 md:hidden group rounded-lg ring-slate-900/5 shadow-lg hover:bg-sky-500 hover:ring-sky-500 transition hover:duration-300"
               key={id}
             >
-              <div className="bg-white space-y-3 p-4 rounded-lg shadow">
+              <div className="space-y-3 p-4 rounded-lg shadow">
                 <div className="flex items-center space-x-2 text-sm">
                   <div>
                     <a
                       href={`/view/${id}`}
-                      className="font-bold text-blue-500 hover:underline"
+                      className="font-bold text-blue-500 hover:underline group-hover:text-white"
                     >
                       {invoiceNo ? invoiceNo : "No ID Exist"}
                     </a>
                   </div>
-                  <div className="text-gray-500">{invoiceDate}</div>
+                  <div className="text-sm font-semibold ">{invoiceDate}</div>
                   <div>
-                    <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+                    <span className="group-hover:text-white p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
                       Delivered
                     </span>
                   </div>
                 </div>
-                <div className="text-sm text-gray-700">
+                <div className="group-hover:text-white text-sm text-gray-700">
                   Kring New Fit office chair, mesh + PU, black
                 </div>
-                <div className="text-sm font-medium text-black">
+                <div className="group-hover:text-white text-sm font-medium text-black">
                   Total Amount: ₹{Number(TotalWithGST) + Number(GSTTotal)}
                 </div>
               </div>
@@ -314,3 +304,49 @@ export default function InvoiceList() {
     </div>
   );
 }
+
+const ComposeButton = () => {
+  return (
+    <a
+      href="/compose"
+      class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 mb-2 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+    >
+      <span class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+      <span class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+        <svg
+          class="w-5 h-5 text-green-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14 5l7 7m0 0l-7 7m7-7H3"
+          ></path>
+        </svg>
+      </span>
+      <span class="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+        <svg
+          class="w-5 h-5 text-green-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14 5l7 7m0 0l-7 7m7-7H3"
+          ></path>
+        </svg>
+      </span>
+      <span class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">
+        Compose New Invoice
+      </span>
+    </a>
+  );
+};
