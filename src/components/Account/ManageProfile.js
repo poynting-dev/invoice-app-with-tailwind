@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { getAuth, updateProfile } from "firebase/auth";
 
@@ -10,6 +10,18 @@ import { db, storage } from "../../firebase";
 import "./ManageProfile.css";
 
 export default function ManageProfile() {
+  const imageRef = useRef(null);
+  const [image, setImage] = useState(null);
+  const [imageChanged, setImageChanged] = useState(false);
+
+  const handleImageChange = (event) => {
+    setImage(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleImageClick = () => {
+    imageRef.current.click();
+  };
+
   const [userImg, setUserImg] = useState();
   const [profile, setProfile] = useState({
     emailAddress: "",
@@ -19,6 +31,7 @@ export default function ManageProfile() {
     companyExtraInfo: "",
     phoneNumber: "",
     sellerName: "",
+    userImage: "",
   });
 
   const [error, setError] = useState("");
@@ -27,51 +40,161 @@ export default function ManageProfile() {
   const displayName = currentUser.displayName;
   const [userUniqueID, setID] = useState("");
 
-  useEffect(() => {
+  const handleImageUpload = (e) => {
     setProfile({
       ...profile,
-      emailAddress: currentUser.email,
-      sellerName: currentUser.displayName,
+      userImage: e.target.files[0],
     });
+    setImageChanged(true);
+  };
+
+  const updateSellerProfile = () => {
+    const isEmpty = Object.values(profile).some((val) => val === "");
+    const storageRef = ref(
+      storage,
+      `/${currentUser.email}/profile/${profile.userImage.name}`
+    );
+
+    if (isEmpty) {
+      alert("One or more fields are empty");
+      console.log(
+        "storageRef: ",
+        `/${currentUser.email}/profile/${profile.userImage.name}`
+      );
+      // console.log(profile);
+      return;
+    }
+
+    if (imageChanged) {
+      const uploadImage = uploadBytesResumable(storageRef, profile.userImage);
+      uploadImage.on(
+        "state_changed",
+        (snapshot) => {
+          const progressPercent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          // setProgress(progressPercent);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+            const invoiceRef = collection(db, "invoices");
+
+            console.log("url: ", url);
+            setProfile({
+              ...profile,
+              userImage: url,
+              updatedAt: Timestamp.now().toDate(),
+            });
+            // addDoc(invoiceRef, {
+            //   ...profile,
+            //   updatedAt: Timestamp.now().toDate(),
+            // })
+            db.collection("invoices")
+              .doc(userUniqueID)
+              .update({ ...profile, userImage: url }, { merge: true })
+              .then(function () {
+                console.log("Successfully Updated");
+              })
+              .catch(function (error) {
+                console.log("Error Inserting Data: ", error);
+              });
+            // .then(() => {
+            // console.log("Account successfully");
+            // toast("Account successfully", { type: "success" });
+            // setProgress(0);
+            // })
+            // .catch((err) => {
+            //   console.log("Error updating Account");
+            // toast("Error adding article", { type: "error" });
+            // });
+          });
+        }
+      );
+    } else {
+      db.collection("invoices")
+        .doc(userUniqueID)
+        .update({ ...profile }, { merge: true })
+        .then(function () {
+          console.log("Successfully Updated");
+        })
+        .catch(function (error) {
+          console.log("Error Inserting Data: ", error);
+        });
+    }
+  };
+
+  useEffect(() => {
     // console.log(currentUser.email);
     db.collection("invoices")
       .where("userName", "==", currentUser.email)
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          console.log("Document data:", doc.id);
+          console.log("Document data:", doc.data());
           setID(doc.id);
+          // ---------------
+          setProfile({
+            ...profile,
+            emailAddress: currentUser.email,
+            sellerName: currentUser.displayName,
+            ...doc.data(),
+          });
+          setImage(doc.data().userImage);
         });
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
       });
+
     return () => {};
   }, []);
 
-  const updateSellerProfile = () => {
-    db.collection("invoices")
-      .doc(userUniqueID)
-      .update({ ...profile }, { merge: true })
-      .then(function () {
-        console.log("Successfully Inserted");
-      })
-      .catch(function (error) {
-        console.log("Error Inserting Data: ", error);
-      });
+  const updateSellerProfileOlder = () => {
+    const isEmpty = Object.values(profile).some((val) => val === "");
+
+    if (isEmpty) {
+      alert("One or more fields are empty");
+      console.log(profile);
+      console.log(profile.userImage);
+    } else {
+      db.collection("invoices")
+        .doc(userUniqueID)
+        .update({ ...profile }, { merge: true })
+        .then(function () {
+          console.log("Successfully Inserted");
+        })
+        .catch(function (error) {
+          console.log("Error Inserting Data: ", error);
+        });
+    }
   };
 
   const handleChange = (e) => {
+    console.log(e.target.name, e.target.value);
     setProfile({
       ...profile,
       [e.target.name]: e.target.value,
     });
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
   return (
     <div className="mb-24">
       <div class="container">
         <h2>Edit your Info.</h2>
+
+        {/* <div class="grid md:grid-cols-2 md:gap-6">
+          {Object.entries(profile).map(([key, value], index) => (
+            <InputField
+              name={key}
+              value={value}
+              label={key}
+              handleChange={handleChange}
+            />
+          ))}
+        </div> */}
 
         <div class="relative z-0 mb-6 w-full group">
           <input
@@ -111,6 +234,25 @@ export default function ManageProfile() {
               Your Name
             </label>
           </div>
+          <div class="relative z-0 mb-6 w-full group">
+            <input
+              type="number"
+              name="phoneNumber"
+              id="phoneNumber"
+              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              value={profile.phoneNumber}
+              placeholder=" "
+              onChange={(e) => handleChange(e)}
+              required
+            />
+            <label
+              for="phoneNumber"
+              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Your Contact No.
+            </label>
+          </div>
+
           <div class="relative z-0 mb-6 w-full group">
             <input
               type="text"
@@ -168,58 +310,37 @@ export default function ManageProfile() {
             </label>
           </div>
         </div>
-
-        <div className="mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Attach Logo here:
-            </label>
-            <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-              <div className="space-y-1 text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 48 48"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div className="flex text-sm text-gray-600">
-                  <label
-                    htmlFor="companyLogo"
-                    className="relative cursor-pointer rounded-md font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                  >
-                    <span>Upload a file</span>
-                    <input
-                      id="companyLogo"
-                      name="companyLogo"
-                      type="file"
-                      className="sr-only"
-                    />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
-                </div>
-                <p className="text-xs text-gray-500">
-                  PNG, JPG, GIF up to 10MB
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <RoundedCircleImageUploader />
+        {/* <RoundedCircleImageUploader
+          handleImageUpload={handleImageUpload}
+          profile={profile}
+        /> */}
+        {/* -------------------------------Image Uploader--------------- */}
+        <div class="profile-pic">
+          <img
+            alt="User Pic"
+            src={
+              image == null
+                ? "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png"
+                : image
+            }
+            id="profile-image1"
+            height="200"
+            onClick={handleImageClick}
+          />
+          <input
+            ref={imageRef}
+            id="profile-image-upload"
+            class="hidden"
+            type="file"
+            name="userImage"
+            onChange={(e) => (handleImageChange(e), handleImageUpload(e))}
+          />
+          <div style={{ color: "#999" }}> </div>
         </div>
-        <button className="container">
+        {/* -------------------------------Image Uploader--------------- */}
+        <button className="container ">
           <button class="snip1547" onClick={updateSellerProfile}>
             <span>Submit</span>
-            {/* <div class="simple-spinner">
-              <span></span>
-            </div> */}
           </button>
         </button>
       </div>
@@ -227,25 +348,68 @@ export default function ManageProfile() {
   );
 }
 
-function RoundedCircleImageUploader() {
-  const [image, setImage] = useState(null);
+function RoundedCircleImageUploader(props) {
+  const imageRef = useRef(null);
+  const [image, setImage] = useState(props.profile.userImage);
 
   const handleImageChange = (event) => {
     setImage(URL.createObjectURL(event.target.files[0]));
   };
 
+  const handleImageClick = () => {
+    imageRef.current.click();
+  };
+
+  useEffect(() => {
+    return () => {};
+  }, [image]);
+
   return (
-    <div>
-      <div className="image-container border-2 border-dashed border-cyan-500">
-        {image ? (
-          <img src={image} alt="uploaded image" className="rounded-circle" />
-        ) : (
-          <div className="plus-icon">
-            +
-            <input type="file" onChange={handleImageChange} />
-          </div>
-        )}
-      </div>
+    <div class="profile-pic">
+      <img
+        alt="User Pic"
+        src={
+          image == null
+            ? "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png"
+            : image
+        }
+        id="profile-image1"
+        height="200"
+        onClick={handleImageClick}
+      />
+      <input
+        ref={imageRef}
+        id="profile-image-upload"
+        class="hidden"
+        type="file"
+        name="userImage"
+        onChange={(e) => (handleImageChange(e), props.handleImageUpload(e))}
+      />
+      <div style={{ color: "#999" }}> </div>
     </div>
   );
 }
+
+const InputField = (props) => {
+  return (
+    <div class="relative z-0 mb-6 w-full group">
+      <input
+        type="text"
+        name="sellerName" //props.name
+        id="sellerName" //props.name
+        class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        value={props.value} //props.value
+        placeholder=" "
+        onChange={(e) => props.handleChange(e)} //props.handleChange
+        required
+      />
+      <label
+        for="sellerName"
+        class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+      >
+        {props.label}
+      </label>
+    </div>
+  );
+};
+//props.name, props.value, props.handleChange, props.label

@@ -28,6 +28,7 @@ var options = {
 };
 
 export default function Dashboard() {
+  const [userUniqueID, setUserUniqueID] = useState("");
   const [error, setError] = useState("");
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -144,28 +145,34 @@ export default function Dashboard() {
       alert("Please fill all the fields");
       return;
     }
-    db.collection("invoices")
-      .add({
-        invoiceNo: Math.random().toString().substr(2, 6),
-        items: items,
-        billing: billing,
-        from: from,
-        invoiceDate: invoiceDate,
-        dueDate: dueDate,
-        TotalWithGST: TotalWithGST,
-        GSTTotal: GSTTotal,
-      })
-      .then(() => {
-        // toast("Article added successfully", {
-        //   type: "success",
-        // });
-        console.log("Uploaded");
-        setProgress(0);
-      })
-      .catch((err) => {
-        console.log(err);
-        // console.log("Error adding article", { type: "error" });
-      });
+    db.collection("invoices").add;
+
+    try {
+      const invoicesRef = db.collection("invoices");
+      const invoiceRef = invoicesRef.doc(userUniqueID);
+      const dataRef = invoiceRef.collection("invoicesList");
+
+      dataRef
+        .add({
+          invoiceNo: Math.random().toString().substr(2, 6),
+          items: items,
+          billing: billing,
+          from: from,
+          invoiceDate: invoiceDate,
+          dueDate: dueDate,
+          TotalWithGST: TotalWithGST,
+          GSTTotal: GSTTotal,
+        })
+        .then(() => {
+          // toast("Article added successfully", {
+          //   type: "success",
+          // });
+          setProgress(0);
+          console.log("Data added to subcollection successfully");
+        });
+    } catch (error) {
+      console.error("Error adding data to subcollection: ", error);
+    }
     // -------------------------------
     // const storageRef = ref(
     //   storage,
@@ -225,6 +232,30 @@ export default function Dashboard() {
   useEffect(() => {
     handleGSTChange();
     handlePriceChange();
+
+    if (!userUniqueID) {
+      db.collection("invoices")
+        .where("userName", "==", currentUser.email)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            console.log("Document data:", doc.data());
+            setUserUniqueID(doc.id);
+            // ---------------
+            // setProfile({
+            //   ...profile,
+            //   emailAddress: currentUser.email,
+            //   sellerName: currentUser.displayName,
+            //   ...doc.data(),
+            // });
+            // setImage(doc.data().userImage);
+          });
+        })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+        });
+    }
+
     return () => {
       handleGSTChange();
       handlePriceChange();
