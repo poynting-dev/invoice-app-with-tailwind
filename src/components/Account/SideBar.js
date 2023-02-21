@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import Dashboard from "../../Dashboard";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function SideBar({ content }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -8,7 +10,19 @@ export default function SideBar({ content }) {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
   const [isSubHeaderOpen, setIsSubHeaderOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
 
+  async function handleLogout() {
+    // setError("");
+
+    try {
+      await logout();
+      navigate("/login");
+    } catch {
+      // setError("Failed to log out");
+    }
+  }
   return (
     <>
       <div className="sm:flex antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
@@ -117,7 +131,7 @@ export default function SideBar({ content }) {
                   </a>
 
                   <a
-                    href="#"
+                    onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
@@ -287,7 +301,7 @@ export default function SideBar({ content }) {
                   </a>
 
                   <a
-                    href="#"
+                    onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >

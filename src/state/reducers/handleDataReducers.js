@@ -27,7 +27,17 @@ const userProfile = (state = {}, action) => {
   }
 };
 
+const userUniqueID = (state = null, action) => {
+  switch (action.type) {
+    case "SET_USER_ID":
+      return action.id;
+    default:
+      return state;
+  }
+};
+
 export const rootReducer = combineReducers({
   invoices,
   userProfile,
+  userUniqueID,
 });

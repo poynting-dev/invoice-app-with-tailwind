@@ -145,7 +145,6 @@ export default function Dashboard() {
       alert("Please fill all the fields");
       return;
     }
-    db.collection("invoices").add;
 
     try {
       const invoicesRef = db.collection("invoices");
@@ -171,7 +170,13 @@ export default function Dashboard() {
           console.log("Data added to subcollection successfully");
         });
     } catch (error) {
-      console.error("Error adding data to subcollection: ", error);
+      console.error(
+        "Subcollection ID: " +
+          userUniqueID +
+          "<br/>" +
+          "Error adding data to subcollection: ",
+        error
+      );
     }
     // -------------------------------
     // const storageRef = ref(

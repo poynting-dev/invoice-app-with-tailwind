@@ -5,3 +5,28 @@ When we don't want to update the image, but the other data then ->
     -> how to handle code such that it update the data, but not the image.
             -> if image is already there in db, but we are not updating the image, 
                 then write the logic to check that we are not updating the image but updating the other data in profile.
+
+
+snapshot.docs.map((doc) => {
+        const invoiceRef = collection(
+          db,
+          `invoices/${userUniqueID}/invoicesList`
+        );
+        const queryInvoicesList = query(invoiceRef);
+        onSnapshot(queryInvoicesList, (snapshot) => {
+          const invoices = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          
+          setInvoices(invoices);
+          // console.log(invoices);
+        });
+
+        // console.log("Posts:" + JSON.stringify(invoices));
+      });
+apply check to above query so that if invoicesList subcollection is empty, it breaks the further execution in reactjs. 
+
+
+
+Create new user collection which collects each user data-> (manage user info & invoiceList)

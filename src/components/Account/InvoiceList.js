@@ -10,69 +10,149 @@ import {
 import { db } from "../../firebase";
 import { ToolTip } from "./ToolTip";
 import { useAuth } from "../../contexts/AuthContext";
+import { store } from "../../state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { actionCreators } from "../../state/index";
+
+// ---------
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 export default function InvoiceList() {
+  const dispatch = useDispatch();
   const [invoices, setInvoices] = useState([]);
   const [tooltipStatus, setTooltipStatus] = useState(0);
 
   const { currentUser } = useAuth();
+  // const [userUniqueID, setID] = useState("");
+
+  function createUserCollection(email) {
+    const invoicesRef = db.collection("invoices");
+    const query = invoicesRef.where("emailAddress", "==", email).limit(1);
+    query.get().then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+      } else {
+        // Create a new invoice document
+        const newInvoice = {
+          emailAddress: email,
+          userName: email,
+          // invoicesList: [],
+        };
+        invoicesRef.add(newInvoice);
+      }
+    });
+  }
+
+  const userUniqueID = useSelector((state) => state.userUniqueID);
+  // const [userUniqueID, setUserUniqueID] = useState(store.getState.userUniqueID);
 
   useEffect(() => {
-    const DBRef = collection(db, "invoices");
-    const queryInvoices = query(
-      DBRef,
-      where("userName", "==", currentUser.email)
-    );
-    onSnapshot(queryInvoices, (snapshot) => {
-      snapshot.docs.map((doc) => {
-        const invoiceRef = collection(
-          db,
-          "invoices/5eEacX2iOIJAzpJYBRtv/invoicesList"
-        );
-        const queryInvoicesList = query(invoiceRef);
-        onSnapshot(queryInvoicesList, (snapshot) => {
-          const invoices = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setInvoices(invoices);
-          console.log(invoices);
-        });
+    // store.dispatch(actionCreators.fetchUserUniqueID)
 
-        // console.log("Posts:" + JSON.stringify(invoices));
-      });
-    });
+    store.dispatch(actionCreators.fetchUserUniqueID(currentUser.email));
+    console.log(userUniqueID);
+    // actionCreators.mapDispatchToProps.setUniqueUserID("qYAhBXVsV3yQCWShsUHd");
+    // if (userUniqueID == null) {
+    //   dispatch(actionCreators.setUniqueUserID("55"));
+    //   console.log("called");
+    // }
+    // console.log(actionCreators.setUniqueUserID("55"));
 
-    // db.collection("invoices")
-    //   .doc("5eEacX2iOIJAzpJYBRtv")
-    //   .collection("invoicesList")
-    //   .doc("Dqsdrmo8T0qevnGoTIFK")
-    //   .get()
-    //   .then(function (doc) {
-    //     if (doc.exists) {
-    //       // console.log(doc.data());
-    //       let getData = doc.data();
-    //       console.log(getData);
-    //     } else {
-    //       // doc.data() will be undefined in this case
-    //       console.log("No such document!");
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Error getting document:", error);
-    //   });
-
-    // const queryInvoices1 = query(invoiceRef1);
-    // onSnapshot(queryInvoices1, (snapshot) => {
-    //   const invoices = snapshot.docs.map((doc) => ({
-    //     id: doc.id,
-    //     ...doc.data(),
-    //   }));
-    //   // setInvoices(invoices);
-    //   console.log(invoices);
-    //   // console.log("Posts:" + JSON.stringify(invoices));
-    // });
+    // store.dispatch(setUniqueUserID("qYAhBXVsV3yQCWShsUHd"));
   }, []);
+
+  // useEffect(() => {
+  //   createUserCollection(currentUser.email);
+
+  //   db.collection("invoices")
+  //     .where("userName", "==", currentUser.email)
+  //     .get()
+  //     .then(function (querySnapshot) {
+  //       querySnapshot.forEach(function (doc) {
+  //         setID(doc.id);
+  //       });
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Error getting documents: ", error);
+  //     })
+  //     .then(() => {
+  //       console.log(userUniqueID);
+  //     });
+
+  //   const DBRef = collection(db, "invoices");
+  //   const queryInvoices = query(
+  //     DBRef,
+  //     where("userName", "==", currentUser.email)
+  //   );
+  //   onSnapshot(queryInvoices, (snapshot) => {
+  //     // --------------
+  //     var invoicesRef = db
+  //       .collection("invoices")
+  //       .doc(userUniqueID)
+  //       .collection("invoicesList");
+
+  //     // invoicesRef.onSnapshot(function (snapshot) {
+  //     //   snapshot.forEach(function (doc) {
+  //     //     // console.log(doc.id);
+  //     //     // console.log(doc.data());
+  //     //     var tmp = [{ ...doc.data(), id: doc.id }];
+  //     //     console.log(tmp);
+  //     //     setInvoices((prevInvoices) => [...prevInvoices, tmp]);
+  //     //   });
+  //     // });
+
+  //     //-----------------
+
+  //     snapshot.docs.map((doc) => {
+  //       const invoiceRef = collection(
+  //         db,
+  //         `invoices/${userUniqueID}/invoicesList`
+  //       );
+  //       const queryInvoicesList = query(invoiceRef);
+  //       onSnapshot(queryInvoicesList, (snapshot) => {
+  //         const invoices = snapshot.docs.map((doc) => ({
+  //           ...doc.data(),
+  //           id: doc.id,
+  //         }));
+
+  //         setInvoices(invoices);
+  //         // console.log(invoices);
+  //       });
+
+  //       // console.log("Posts:" + JSON.stringify(invoices));
+  //     });
+  //   });
+
+  //   // db.collection("invoices")
+  //   //   .doc("5eEacX2iOIJAzpJYBRtv")
+  //   //   .collection("invoicesList")
+  //   //   .doc("BZTpJkoBIn99WlqKWLgj")
+  //   //   .get()
+  //   //   .then(function (doc) {
+  //   //     if (doc.exists) {
+  //   //       // console.log(doc.data());
+  //   //       let getData = doc.data();
+  //   //       console.log(getData);
+  //   //     } else {
+  //   //       // doc.data() will be undefined in this case
+  //   //       console.log("No such document!");
+  //   //     }
+  //   //   })
+  //   //   .catch(function (error) {
+  //   //     console.log("Error getting document:", error);
+  //   //   });
+
+  //   // const queryInvoices1 = query(invoiceRef1);
+  //   // onSnapshot(queryInvoices1, (snapshot) => {
+  //   //   const invoices = snapshot.docs.map((doc) => ({
+  //   //     id: doc.id,
+  //   //     ...doc.data(),
+  //   //   }));
+  //   //   // setInvoices(invoices);
+  //   //   console.log(invoices);
+  //   //   // console.log("Posts:" + JSON.stringify(invoices));
+  //   // });
+  // }, []);
 
   const moveData = () => {
     console.log(invoices);
@@ -250,17 +330,17 @@ export default function InvoiceList() {
 
       {invoices.length === 0 ? (
         <div className="p-3 text-sm text-gray-700 whitespace-nowrap ">
-          <div class="border border-blue-300 shadow rounded-md p-4 mx-auto">
-            <div class="animate-pulse flex space-x-4">
-              <div class="rounded-full bg-slate-700 h-10 w-10"></div>
-              <div class="flex-1 space-y-6 py-1">
-                <div class="h-2 bg-slate-700 rounded"></div>
-                <div class="space-y-3">
-                  <div class="grid grid-cols-3 gap-4">
-                    <div class="h-2 bg-slate-700 rounded col-span-2"></div>
-                    <div class="h-2 bg-slate-700 rounded col-span-1"></div>
+          <div className="border border-blue-300 shadow rounded-md p-4 mx-auto">
+            <div className="animate-pulse flex space-x-4">
+              <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+              <div className="flex-1 space-y-6 py-1">
+                <div className="h-2 bg-slate-700 rounded"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                    <div className="h-2 bg-slate-700 rounded col-span-1"></div>
                   </div>
-                  <div class="h-2 bg-slate-700 rounded"></div>
+                  <div className="h-2 bg-slate-700 rounded"></div>
                 </div>
               </div>
             </div>
@@ -309,42 +389,42 @@ const ComposeButton = () => {
   return (
     <a
       href="/compose"
-      class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 mb-2 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+      className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 mb-2 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
     >
-      <span class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
-      <span class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+      <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+      <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
         <svg
-          class="w-5 h-5 text-green-400"
+          className="w-5 h-5 text-green-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M14 5l7 7m0 0l-7 7m7-7H3"
           ></path>
         </svg>
       </span>
-      <span class="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+      <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
         <svg
-          class="w-5 h-5 text-green-400"
+          className="w-5 h-5 text-green-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M14 5l7 7m0 0l-7 7m7-7H3"
           ></path>
         </svg>
       </span>
-      <span class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">
+      <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">
         Compose New Invoice
       </span>
     </a>

@@ -182,10 +182,10 @@ export default function ManageProfile() {
   };
   return (
     <div className="mb-24">
-      <div class="container">
+      <div className="container">
         <h2>Edit your Info.</h2>
 
-        {/* <div class="grid md:grid-cols-2 md:gap-6">
+        {/* <div className="grid md:grid-cols-2 md:gap-6">
           {Object.entries(profile).map(([key, value], index) => (
             <InputField
               name={key}
@@ -196,12 +196,12 @@ export default function ManageProfile() {
           ))}
         </div> */}
 
-        <div class="relative z-0 mb-6 w-full group">
+        <div className="relative z-0 mb-6 w-full group">
           <input
             type="email"
             name="emailAddress"
             id="userEmail"
-            class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             value={profile.emailAddress}
             // onChange={(e) => handleChange(e)}
@@ -209,19 +209,19 @@ export default function ManageProfile() {
           />
           <label
             for="emailAddress"
-            class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Email address
           </label>
         </div>
 
-        <div class="grid md:grid-cols-2 md:gap-6">
-          <div class="relative z-0 mb-6 w-full group">
+        <div className="grid md:grid-cols-2 md:gap-6">
+          <div className="relative z-0 mb-6 w-full group">
             <input
               type="text"
               name="sellerName"
               id="sellerName"
-              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               value={profile.sellerName}
               placeholder=" "
               onChange={(e) => handleChange(e)}
@@ -229,17 +229,17 @@ export default function ManageProfile() {
             />
             <label
               for="sellerName"
-              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Your Name
             </label>
           </div>
-          <div class="relative z-0 mb-6 w-full group">
+          <div className="relative z-0 mb-6 w-full group">
             <input
               type="number"
               name="phoneNumber"
               id="phoneNumber"
-              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               value={profile.phoneNumber}
               placeholder=" "
               onChange={(e) => handleChange(e)}
@@ -247,18 +247,18 @@ export default function ManageProfile() {
             />
             <label
               for="phoneNumber"
-              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Your Contact No.
             </label>
           </div>
 
-          <div class="relative z-0 mb-6 w-full group">
+          <div className="relative z-0 mb-6 w-full group">
             <input
               type="text"
               name="companyName"
               id="companyName"
-              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               value={profile.companyName}
               onChange={(e) => handleChange(e)}
@@ -266,18 +266,18 @@ export default function ManageProfile() {
             />
             <label
               for="companyName"
-              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Company Name
             </label>
           </div>
 
-          <div class="relative z-0 mb-6 w-full group">
+          <div className="relative z-0 mb-6 w-full group">
             <input
               type="text"
               name="companyAddress"
               id="companyAddress"
-              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               value={profile.companyAddress}
               onChange={(e) => handleChange(e)}
@@ -285,18 +285,18 @@ export default function ManageProfile() {
             />
             <label
               for="companyAddress"
-              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Company Address
             </label>
           </div>
 
-          <div class="relative z-0 mb-6 w-full group">
+          <div className="relative z-0 mb-6 w-full group">
             <input
               type="text"
               name="companyExtraInfo"
               id="companyExtraInfo"
-              class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               value={profile.companyExtraInfo}
               onChange={(e) => handleChange(e)}
@@ -304,7 +304,7 @@ export default function ManageProfile() {
             />
             <label
               for="companyExtraInfo"
-              class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Extra Info
             </label>
@@ -315,7 +315,7 @@ export default function ManageProfile() {
           profile={profile}
         /> */}
         {/* -------------------------------Image Uploader--------------- */}
-        <div class="profile-pic">
+        <div className="profile-pic">
           <img
             alt="User Pic"
             src={
@@ -330,7 +330,7 @@ export default function ManageProfile() {
           <input
             ref={imageRef}
             id="profile-image-upload"
-            class="hidden"
+            className="hidden"
             type="file"
             name="userImage"
             onChange={(e) => (handleImageChange(e), handleImageUpload(e))}
@@ -339,7 +339,7 @@ export default function ManageProfile() {
         </div>
         {/* -------------------------------Image Uploader--------------- */}
         <button className="container ">
-          <button class="snip1547" onClick={updateSellerProfile}>
+          <button className="snip1547" onClick={updateSellerProfile}>
             <span>Submit</span>
           </button>
         </button>
@@ -365,7 +365,7 @@ function RoundedCircleImageUploader(props) {
   }, [image]);
 
   return (
-    <div class="profile-pic">
+    <div className="profile-pic">
       <img
         alt="User Pic"
         src={
@@ -380,7 +380,7 @@ function RoundedCircleImageUploader(props) {
       <input
         ref={imageRef}
         id="profile-image-upload"
-        class="hidden"
+        className="hidden"
         type="file"
         name="userImage"
         onChange={(e) => (handleImageChange(e), props.handleImageUpload(e))}
@@ -392,12 +392,12 @@ function RoundedCircleImageUploader(props) {
 
 const InputField = (props) => {
   return (
-    <div class="relative z-0 mb-6 w-full group">
+    <div className="relative z-0 mb-6 w-full group">
       <input
         type="text"
         name="sellerName" //props.name
         id="sellerName" //props.name
-        class="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
         value={props.value} //props.value
         placeholder=" "
         onChange={(e) => props.handleChange(e)} //props.handleChange
@@ -405,7 +405,7 @@ const InputField = (props) => {
       />
       <label
         for="sellerName"
-        class="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
         {props.label}
       </label>

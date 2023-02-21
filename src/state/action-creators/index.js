@@ -1,3 +1,5 @@
+import { db } from "../../firebase";
+
 const addInvoice = (invoice) => ({
   type: "ADD_INVOICE",
   invoice,
@@ -19,9 +21,33 @@ const setUserProfile = (profile) => ({
   profile,
 });
 
+export const setUniqueUserID = (id) => ({
+  type: "SET_USER_ID",
+  id,
+});
+
+export const fetchUserUniqueID = (email) => {
+  return async (dispatch) => {
+    db.collection("invoices")
+      .where("userName", "==", email)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          dispatch(setUniqueUserID(doc.id));
+          console.log("userUniqueId has been setted: " + doc.id);
+        });
+      })
+      .catch(function (error) {
+        console.log("Error getting documents: ", error);
+      });
+  };
+};
+
 export const mapDispatchToProps = (dispatch) => ({
   addInvoice: (invoice) => dispatch(addInvoice(invoice)),
   updateInvoice: (id, updates) => dispatch(updateInvoice(id, updates)),
   deleteInvoice: (id) => dispatch(deleteInvoice(id)),
   setUserProfile: (profile) => dispatch(setUserProfile(profile)),
+  setUniqueUserID: (id) => dispatch(setUniqueUserID(id)),
+  fetchUserUniqueID,
 });

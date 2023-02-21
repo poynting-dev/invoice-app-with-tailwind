@@ -4,6 +4,6 @@ import { rootReducer } from "./reducers/handleDataReducers";
 
 export const store = createStore(
   rootReducer,
-  { invoices: [], userProfile: [] },
+  { invoices: [], userProfile: [], userUniqueID: null },
   applyMiddleware(thunk)
 );

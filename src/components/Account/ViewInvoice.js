@@ -27,6 +27,7 @@ import "hammerjs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Button } from "@progress/kendo-react-buttons";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ViewInvoice() {
   // ------------------------------------------
@@ -52,6 +53,8 @@ export default function ViewInvoice() {
   };
   // ---------------------------------------------
   let { id } = useParams();
+  const { currentUser } = useAuth();
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   const [formData, setFormData] = useState({
     GSTTotal: "",
@@ -66,14 +69,16 @@ export default function ViewInvoice() {
   });
 
   useEffect(() => {
-    db.collection("invoices")
+    const invoicesRef = db.collection("invoices");
+    const invoiceRef = invoicesRef.doc("5eEacX2iOIJAzpJYBRtv");
+    const dataRef = invoiceRef.collection("invoicesList");
+    dataRef
       .doc(id)
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          // console.log(doc.data());
+          console.log(doc.data());
           let getData = doc.data();
-          // console.log(getData);
           setFormData({ formData, ...getData });
         } else {
           // doc.data() will be undefined in this case
@@ -83,6 +88,47 @@ export default function ViewInvoice() {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
+    ///getting current user collection Id from FIrestore
+    // db.collection("invoices")
+    //   .where("userName", "==", currentUser.email)
+    //   .get()
+    //   .then(function (querySnapshot) {
+    //     querySnapshot.forEach(function (doc) {
+    //       console.log("Document data:", doc.id);
+    //       setCurrentUserId(doc.id);
+    //       // ---------------
+    //       // setProfile({
+    //       //   ...profile,
+    //       //   emailAddress: currentUser.email,
+    //       //   sellerName: currentUser.displayName,
+    //       //   ...doc.data(),
+    //       // });
+    //       const invoicesRef = db.collection("invoices");
+    //       const invoiceRef = invoicesRef.doc(doc.id);
+    //       const dataRef = invoiceRef.collection("invoicesList");
+    //       dataRef
+    //         .doc(id)
+    //         .get()
+    //         .then(function (doc) {
+    //           if (doc.exists) {
+    //             // console.log(doc.data());
+    //             let getData = doc.data();
+    //             // console.log(getData);
+    //             setFormData({ formData, ...getData });
+    //           } else {
+    //             // doc.data() will be undefined in this case
+    //             console.log("No such document!");
+    //           }
+    //         })
+    //         .catch(function (error) {
+    //           console.log("Error getting document:", error);
+    //         });
+    //     });
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting documents: ", error);
+    //   });
+    /////////----------------------------
   }, []);
 
   const fetchedImgSrc = formData.image;
