@@ -17,8 +17,10 @@ import { actionCreators } from "../../state/index";
 // ---------
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { mapDispatchToProps } from "../../state/action-creators";
+import { Link } from "react-router-dom";
 
-export default function InvoiceList() {
+function InvoiceList() {
   const dispatch = useDispatch();
   const [invoices, setInvoices] = useState([]);
   const [tooltipStatus, setTooltipStatus] = useState(0);
@@ -47,10 +49,13 @@ export default function InvoiceList() {
   // const [userUniqueID, setUserUniqueID] = useState(store.getState.userUniqueID);
 
   useEffect(() => {
-    // store.dispatch(actionCreators.fetchUserUniqueID)
-
-    store.dispatch(actionCreators.fetchUserUniqueID(currentUser.email));
-    console.log(userUniqueID);
+    // fetchUserUniqueID(currentUser.email);
+    if (!userUniqueID) {
+      store.dispatch(actionCreators.fetchUserUniqueID(currentUser.email));
+      console.log("userUniqueID: " + userUniqueID);
+    }
+    // setUniqueUserID("qYAhBXVsV3yQCWShsUHd");
+    // store.dispatch(actionCreators.fetchUserUniqueID(currentUser.email));
     // actionCreators.mapDispatchToProps.setUniqueUserID("qYAhBXVsV3yQCWShsUHd");
     // if (userUniqueID == null) {
     //   dispatch(actionCreators.setUniqueUserID("55"));
@@ -59,100 +64,100 @@ export default function InvoiceList() {
     // console.log(actionCreators.setUniqueUserID("55"));
 
     // store.dispatch(setUniqueUserID("qYAhBXVsV3yQCWShsUHd"));
-  }, []);
+  }, [userUniqueID]);
 
-  // useEffect(() => {
-  //   createUserCollection(currentUser.email);
+  useEffect(() => {
+    createUserCollection(currentUser.email);
 
-  //   db.collection("invoices")
-  //     .where("userName", "==", currentUser.email)
-  //     .get()
-  //     .then(function (querySnapshot) {
-  //       querySnapshot.forEach(function (doc) {
-  //         setID(doc.id);
-  //       });
-  //     })
-  //     .catch(function (error) {
-  //       console.log("Error getting documents: ", error);
-  //     })
-  //     .then(() => {
-  //       console.log(userUniqueID);
-  //     });
+    // db.collection("invoices")
+    //   .where("userName", "==", currentUser.email)
+    //   .get()
+    //   .then(function (querySnapshot) {
+    //     querySnapshot.forEach(function (doc) {
+    //       setID(doc.id);
+    //     });
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting documents: ", error);
+    //   })
+    //   .then(() => {
+    //     console.log(userUniqueID);
+    //   });
 
-  //   const DBRef = collection(db, "invoices");
-  //   const queryInvoices = query(
-  //     DBRef,
-  //     where("userName", "==", currentUser.email)
-  //   );
-  //   onSnapshot(queryInvoices, (snapshot) => {
-  //     // --------------
-  //     var invoicesRef = db
-  //       .collection("invoices")
-  //       .doc(userUniqueID)
-  //       .collection("invoicesList");
+    const DBRef = collection(db, "invoices");
+    const queryInvoices = query(
+      DBRef,
+      where("userName", "==", currentUser.email)
+    );
+    onSnapshot(queryInvoices, (snapshot) => {
+      // --------------
+      var invoicesRef = db
+        .collection("invoices")
+        .doc("5eEacX2iOIJAzpJYBRtv")
+        .collection("invoicesList");
 
-  //     // invoicesRef.onSnapshot(function (snapshot) {
-  //     //   snapshot.forEach(function (doc) {
-  //     //     // console.log(doc.id);
-  //     //     // console.log(doc.data());
-  //     //     var tmp = [{ ...doc.data(), id: doc.id }];
-  //     //     console.log(tmp);
-  //     //     setInvoices((prevInvoices) => [...prevInvoices, tmp]);
-  //     //   });
-  //     // });
+      // invoicesRef.onSnapshot(function (snapshot) {
+      //   snapshot.forEach(function (doc) {
+      //     // console.log(doc.id);
+      //     // console.log(doc.data());
+      //     var tmp = [{ ...doc.data(), id: doc.id }];
+      //     console.log(tmp);
+      //     setInvoices((prevInvoices) => [...prevInvoices, tmp]);
+      //   });
+      // });
 
-  //     //-----------------
+      //-----------------
 
-  //     snapshot.docs.map((doc) => {
-  //       const invoiceRef = collection(
-  //         db,
-  //         `invoices/${userUniqueID}/invoicesList`
-  //       );
-  //       const queryInvoicesList = query(invoiceRef);
-  //       onSnapshot(queryInvoicesList, (snapshot) => {
-  //         const invoices = snapshot.docs.map((doc) => ({
-  //           ...doc.data(),
-  //           id: doc.id,
-  //         }));
+      snapshot.docs.map((doc) => {
+        const invoiceRef = collection(
+          db,
+          `invoices/${userUniqueID}/invoicesList`
+        );
+        const queryInvoicesList = query(invoiceRef);
+        onSnapshot(queryInvoicesList, (snapshot) => {
+          const invoices = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
 
-  //         setInvoices(invoices);
-  //         // console.log(invoices);
-  //       });
+          setInvoices(invoices);
+          // console.log(invoices);
+        });
 
-  //       // console.log("Posts:" + JSON.stringify(invoices));
-  //     });
-  //   });
+        // console.log("Posts:" + JSON.stringify(invoices));
+      });
+    });
 
-  //   // db.collection("invoices")
-  //   //   .doc("5eEacX2iOIJAzpJYBRtv")
-  //   //   .collection("invoicesList")
-  //   //   .doc("BZTpJkoBIn99WlqKWLgj")
-  //   //   .get()
-  //   //   .then(function (doc) {
-  //   //     if (doc.exists) {
-  //   //       // console.log(doc.data());
-  //   //       let getData = doc.data();
-  //   //       console.log(getData);
-  //   //     } else {
-  //   //       // doc.data() will be undefined in this case
-  //   //       console.log("No such document!");
-  //   //     }
-  //   //   })
-  //   //   .catch(function (error) {
-  //   //     console.log("Error getting document:", error);
-  //   //   });
+    // db.collection("invoices")
+    //   .doc("5eEacX2iOIJAzpJYBRtv")
+    //   .collection("invoicesList")
+    //   .doc("BZTpJkoBIn99WlqKWLgj")
+    //   .get()
+    //   .then(function (doc) {
+    //     if (doc.exists) {
+    //       // console.log(doc.data());
+    //       let getData = doc.data();
+    //       console.log(getData);
+    //     } else {
+    //       // doc.data() will be undefined in this case
+    //       console.log("No such document!");
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting document:", error);
+    //   });
 
-  //   // const queryInvoices1 = query(invoiceRef1);
-  //   // onSnapshot(queryInvoices1, (snapshot) => {
-  //   //   const invoices = snapshot.docs.map((doc) => ({
-  //   //     id: doc.id,
-  //   //     ...doc.data(),
-  //   //   }));
-  //   //   // setInvoices(invoices);
-  //   //   console.log(invoices);
-  //   //   // console.log("Posts:" + JSON.stringify(invoices));
-  //   // });
-  // }, []);
+    // const queryInvoices1 = query(invoiceRef1);
+    // onSnapshot(queryInvoices1, (snapshot) => {
+    //   const invoices = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   }));
+    //   // setInvoices(invoices);
+    //   console.log(invoices);
+    //   // console.log("Posts:" + JSON.stringify(invoices));
+    // });
+  }, [userUniqueID]);
 
   const moveData = () => {
     console.log(invoices);
@@ -227,12 +232,12 @@ export default function InvoiceList() {
                       onMouseEnter={() => setTooltipStatus(id)}
                       onMouseLeave={() => setTooltipStatus(0)}
                     >
-                      <a
-                        href={`/view/${id}`}
+                      <Link
+                        to={`/view/${id}`}
                         className="font-bold text-blue-500 hover:underline"
                       >
                         {invoiceNo ? invoiceNo : "No ID Exist"}
-                      </a>
+                      </Link>
 
                       {/*Code Block for indigo tooltip starts*/}
                       <div className="relative my-28 md:my-0 ">
@@ -356,12 +361,12 @@ export default function InvoiceList() {
               <div className="space-y-3 p-4 rounded-lg shadow">
                 <div className="flex items-center space-x-2 text-sm">
                   <div>
-                    <a
-                      href={`/view/${id}`}
+                    <Link
+                      to={`/view/${id}`}
                       className="font-bold text-blue-500 hover:underline group-hover:text-white"
                     >
                       {invoiceNo ? invoiceNo : "No ID Exist"}
-                    </a>
+                    </Link>
                   </div>
                   <div className="text-sm font-semibold ">{invoiceDate}</div>
                   <div>
@@ -374,7 +379,7 @@ export default function InvoiceList() {
                   Kring New Fit office chair, mesh + PU, black
                 </div>
                 <div className="group-hover:text-white text-sm font-medium text-black">
-                  Total Amount: ₹{Number(TotalWithGST) + Number(GSTTotal)}
+                  Total Amount: Rs. {Number(TotalWithGST) + Number(GSTTotal)}
                 </div>
               </div>
             </div>
@@ -385,10 +390,16 @@ export default function InvoiceList() {
   );
 }
 
+const mapStateToProps = (state) => ({
+  userUniqueID: state.userUniqueID,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvoiceList);
+
 const ComposeButton = () => {
   return (
-    <a
-      href="/compose"
+    <Link
+      to="/compose"
       className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 mb-2 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
     >
       <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
@@ -427,6 +438,6 @@ const ComposeButton = () => {
       <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">
         Compose New Invoice
       </span>
-    </a>
+    </Link>
   );
 };

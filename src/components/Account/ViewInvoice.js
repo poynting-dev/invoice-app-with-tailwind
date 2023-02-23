@@ -28,6 +28,9 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Button } from "@progress/kendo-react-buttons";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSelector } from "react-redux";
+import { store } from "../../state/store";
+import { actionCreators } from "../../state";
 
 export default function ViewInvoice() {
   // ------------------------------------------
@@ -54,7 +57,7 @@ export default function ViewInvoice() {
   // ---------------------------------------------
   let { id } = useParams();
   const { currentUser } = useAuth();
-  const [currentUserId, setCurrentUserId] = useState(null);
+  const userUniqueID = useSelector((state) => state.userUniqueID);
 
   const [formData, setFormData] = useState({
     GSTTotal: "",
@@ -69,25 +72,32 @@ export default function ViewInvoice() {
   });
 
   useEffect(() => {
-    const invoicesRef = db.collection("invoices");
-    const invoiceRef = invoicesRef.doc("5eEacX2iOIJAzpJYBRtv");
-    const dataRef = invoiceRef.collection("invoicesList");
-    dataRef
-      .doc(id)
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          console.log(doc.data());
-          let getData = doc.data();
-          setFormData({ formData, ...getData });
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document:", error);
-      });
+    if (!userUniqueID) {
+      store.dispatch(actionCreators.fetchUserUniqueID(currentUser.email));
+      console.log("userUniqueID: " + userUniqueID);
+    }
+
+    if (userUniqueID) {
+      const invoicesRef = db.collection("invoices");
+      const invoiceRef = invoicesRef.doc(userUniqueID);
+      const dataRef = invoiceRef.collection("invoicesList");
+      dataRef
+        .doc(id)
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            console.log(doc.data());
+            let getData = doc.data();
+            setFormData({ formData, ...getData });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch(function (error) {
+          console.log("Error getting document:", error);
+        });
+    }
     ///getting current user collection Id from FIrestore
     // db.collection("invoices")
     //   .where("userName", "==", currentUser.email)
@@ -129,7 +139,7 @@ export default function ViewInvoice() {
     //     console.log("Error getting documents: ", error);
     //   });
     /////////----------------------------
-  }, []);
+  }, [userUniqueID]);
 
   const fetchedImgSrc = formData.image;
 
@@ -182,7 +192,7 @@ export default function ViewInvoice() {
                   <header>
                     <div className="row">
                       <div className="col">
-                        <a href="javascript:;">
+                        <a href="#">
                           <img
                             src="assets/images/logo-icon.png"
                             width="80"
@@ -260,13 +270,13 @@ export default function ViewInvoice() {
                         <tr>
                           <td colSpan="2"></td>
                           <td colSpan="2">TAX (GST)</td>
-                          <td>₹{formData.GSTTotal}</td>
+                          <td>Rs. {formData.GSTTotal}</td>
                         </tr>
                         <tr>
                           <td colSpan="2"></td>
                           <td colSpan="2">GRAND TOTAL</td>
                           <td>
-                            ₹
+                            Rs.
                             {Number(formData.TotalWithGST) +
                               Number(formData.GSTTotal)}
                           </td>

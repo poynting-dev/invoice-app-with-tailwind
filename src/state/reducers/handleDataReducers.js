@@ -29,10 +29,14 @@ const userProfile = (state = {}, action) => {
 
 const userUniqueID = (state = null, action) => {
   switch (action.type) {
-    case "SET_USER_ID":
+    case "SET_USER_ID": {
+      console.log("option1");
       return action.id;
-    default:
+    }
+    default: {
+      console.log("option2");
       return state;
+    }
   }
 };
 

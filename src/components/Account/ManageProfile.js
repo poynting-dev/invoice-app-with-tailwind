@@ -208,7 +208,7 @@ export default function ManageProfile() {
             required
           />
           <label
-            for="emailAddress"
+            htmlFor="emailAddress"
             className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Email address
@@ -228,7 +228,7 @@ export default function ManageProfile() {
               required
             />
             <label
-              for="sellerName"
+              htmlFor="sellerName"
               className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Your Name
@@ -246,7 +246,7 @@ export default function ManageProfile() {
               required
             />
             <label
-              for="phoneNumber"
+              htmlFor="phoneNumber"
               className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Your Contact No.
@@ -265,7 +265,7 @@ export default function ManageProfile() {
               required
             />
             <label
-              for="companyName"
+              htmlFor="companyName"
               className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Company Name
@@ -284,7 +284,7 @@ export default function ManageProfile() {
               required
             />
             <label
-              for="companyAddress"
+              htmlFor="companyAddress"
               className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Company Address
@@ -303,7 +303,7 @@ export default function ManageProfile() {
               required
             />
             <label
-              for="companyExtraInfo"
+              htmlFor="companyExtraInfo"
               className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Extra Info
@@ -317,6 +317,7 @@ export default function ManageProfile() {
         {/* -------------------------------Image Uploader--------------- */}
         <div className="profile-pic">
           <img
+            className="rounded-md w-100 h-100 shadow-md cursor-pointer"
             alt="User Pic"
             src={
               image == null
@@ -404,7 +405,7 @@ const InputField = (props) => {
         required
       />
       <label
-        for="sellerName"
+        htmlFor="sellerName"
         className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
         {props.label}

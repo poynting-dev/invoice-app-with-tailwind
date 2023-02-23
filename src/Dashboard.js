@@ -409,7 +409,9 @@ export default function Dashboard() {
               Total incl. GST
             </div>
             <div className="text-right w-40">
-              <div className="text-gray-800 font-medium">₹{TotalWithGST}</div>
+              <div className="text-gray-800 font-medium">
+                Rs. {TotalWithGST}
+              </div>
             </div>
           </div>
           <div className="flex justify-between mb-4">
@@ -417,7 +419,7 @@ export default function Dashboard() {
               GST(18%) incl. in Total
             </div>
             <div className="text-right w-40">
-              <div className="text-sm text-gray-600">₹{GSTTotal}</div>
+              <div className="text-sm text-gray-600">Rs. {GSTTotal}</div>
             </div>
           </div>
 

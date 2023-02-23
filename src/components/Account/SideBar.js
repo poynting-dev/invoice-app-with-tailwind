@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Dashboard from "../../Dashboard";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SideBar({ content }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -18,6 +18,7 @@ export default function SideBar({ content }) {
 
     try {
       await logout();
+
       navigate("/login");
     } catch {
       // setError("Failed to log out");
@@ -78,13 +79,13 @@ export default function SideBar({ content }) {
             </button>
 
             {/* <!-- Logo --> */}
-            <a href="/">
+            <Link to="/">
               <img
                 className="w-10 h-auto"
-                src="https://raw.githubusercontent.com/kamona-ui/dashboard-alpine/main/public/assets/images/logo.png"
-                alt="K-UI"
+                src="public\invoice_icon.png"
+                alt="invoice-icon"
               />
-            </a>
+            </Link>
 
             {/* <!-- User avatar button --> */}
             <div
@@ -114,21 +115,21 @@ export default function SideBar({ content }) {
                   aria-orientation="vertical"
                   aria-label="user menu"
                 >
-                  <a
-                    href="/manage-profile"
+                  <Link
+                    to="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
                     Your Profile
-                  </a>
+                  </Link>
 
-                  <a
-                    href="/manage-profile"
+                  <Link
+                    to="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
                     Manage Profile
-                  </a>
+                  </Link>
 
                   <a
                     onClick={handleLogout}
@@ -149,13 +150,13 @@ export default function SideBar({ content }) {
           >
             {/* <!-- Logo --> */}
             <div className="flex-shrink-0 py-4">
-              <a href="/">
+              <Link to="/">
                 <img
                   className="w-10 h-auto"
-                  src="https://raw.githubusercontent.com/kamona-ui/dashboard-alpine/main/public/assets/images/logo.png"
-                  alt="K-UI"
+                  src="public\invoice_icon.png"
+                  alt="invoice-icon"
                 />
-              </a>
+              </Link>
             </div>
             <div className="flex flex-col items-center flex-1 p-2 space-y-4">
               {/* <!-- Menu button --> */}
@@ -284,21 +285,21 @@ export default function SideBar({ content }) {
                   aria-orientation="vertical"
                   aria-label="user menu"
                 >
-                  <a
-                    href="/manage-profile"
+                  <Link
+                    to="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
                     Your Profile
-                  </a>
+                  </Link>
 
-                  <a
-                    href="/manage-profile"
+                  <Link
+                    to="/manage-profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
                     Manage Profile
-                  </a>
+                  </Link>
 
                   <a
                     onClick={handleLogout}
@@ -326,7 +327,7 @@ export default function SideBar({ content }) {
                 <nav aria-label="Main" className="flex flex-col h-full">
                   {/* <!-- Logo --> */}
                   <div className="flex items-center justify-center flex-shrink-0 py-10">
-                    <a href="#">
+                    <Link to="#">
                       <svg
                         className="text-indigo-600"
                         width="96"
@@ -342,10 +343,10 @@ export default function SideBar({ content }) {
                       </svg>
                       <img
                         className="w-24 h-auto"
-                        src="https://raw.githubusercontent.com/kamona-ui/dashboard-alpine/main/public/assets/images/logo.png"
-                        alt="K-UI"
+                        src="public\invoice_icon.png"
+                        alt="invoice-icon"
                       />
-                    </a>
+                    </Link>
                   </div>
 
                   {/* <!-- Links --> */}
