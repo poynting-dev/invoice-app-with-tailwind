@@ -9,7 +9,28 @@ import { db, storage } from "../../firebase";
 
 import "./ManageProfile.css";
 
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import { green, grey } from "@mui/material/colors";
+import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
+import CheckIcon from "@mui/icons-material/Check";
+import SaveIcon from "@mui/icons-material/Save";
+
 export default function ManageProfile() {
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const timer = React.useRef();
+
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      "&:hover": {
+        bgcolor: green[700],
+      },
+    }),
+  };
+
   const imageRef = useRef(null);
   const [image, setImage] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
@@ -48,6 +69,17 @@ export default function ManageProfile() {
     setImageChanged(true);
   };
 
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      timer.current = window.setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   const updateSellerProfile = () => {
     const isEmpty = Object.values(profile).some((val) => val === "");
     const storageRef = ref(
@@ -65,64 +97,72 @@ export default function ManageProfile() {
       return;
     }
 
-    if (imageChanged) {
-      const uploadImage = uploadBytesResumable(storageRef, profile.userImage);
-      uploadImage.on(
-        "state_changed",
-        (snapshot) => {
-          const progressPercent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          // setProgress(progressPercent);
-        },
-        (err) => {
-          console.log(err);
-        },
-        () => {
-          getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-            const invoiceRef = collection(db, "invoices");
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      if (imageChanged) {
+        const uploadImage = uploadBytesResumable(storageRef, profile.userImage);
+        uploadImage.on(
+          "state_changed",
+          (snapshot) => {
+            const progressPercent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            // setProgress(progressPercent);
+          },
+          (err) => {
+            console.log(err);
+          },
+          () => {
+            getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+              const invoiceRef = collection(db, "invoices");
 
-            console.log("url: ", url);
-            setProfile({
-              ...profile,
-              userImage: url,
-              updatedAt: Timestamp.now().toDate(),
-            });
-            // addDoc(invoiceRef, {
-            //   ...profile,
-            //   updatedAt: Timestamp.now().toDate(),
-            // })
-            db.collection("invoices")
-              .doc(userUniqueID)
-              .update({ ...profile, userImage: url }, { merge: true })
-              .then(function () {
-                console.log("Successfully Updated");
-              })
-              .catch(function (error) {
-                console.log("Error Inserting Data: ", error);
+              console.log("url: ", url);
+              setProfile({
+                ...profile,
+                userImage: url,
+                updatedAt: Timestamp.now().toDate(),
               });
-            // .then(() => {
-            // console.log("Account successfully");
-            // toast("Account successfully", { type: "success" });
-            // setProgress(0);
-            // })
-            // .catch((err) => {
-            //   console.log("Error updating Account");
-            // toast("Error adding article", { type: "error" });
-            // });
+              // addDoc(invoiceRef, {
+              //   ...profile,
+              //   updatedAt: Timestamp.now().toDate(),
+              // })
+              db.collection("invoices")
+                .doc(userUniqueID)
+                .update({ ...profile, userImage: url }, { merge: true })
+                .then(function () {
+                  console.log("Successfully Updated");
+                  setSuccess(true);
+                  setLoading(false);
+                })
+                .catch(function (error) {
+                  console.log("Error Inserting Data: ", error);
+                });
+              // .then(() => {
+              // console.log("Account successfully");
+              // toast("Account successfully", { type: "success" });
+              // setProgress(0);
+              // })
+              // .catch((err) => {
+              //   console.log("Error updating Account");
+              // toast("Error adding article", { type: "error" });
+              // });
+            });
+          }
+        );
+      } else {
+        db.collection("invoices")
+          .doc(userUniqueID)
+          .update({ ...profile }, { merge: true })
+          .then(function () {
+            console.log("Successfully Updated");
+            setSuccess(true);
+            setLoading(false);
+          })
+          .catch(function (error) {
+            console.log("Error Inserting Data: ", error);
           });
-        }
-      );
-    } else {
-      db.collection("invoices")
-        .doc(userUniqueID)
-        .update({ ...profile }, { merge: true })
-        .then(function () {
-          console.log("Successfully Updated");
-        })
-        .catch(function (error) {
-          console.log("Error Inserting Data: ", error);
-        });
+      }
     }
   };
 
@@ -149,7 +189,9 @@ export default function ManageProfile() {
         console.log("Error getting documents: ", error);
       });
 
-    return () => {};
+    return () => {
+      clearTimeout(timer.current);
+    };
   }, []);
 
   const updateSellerProfileOlder = () => {
@@ -339,9 +381,29 @@ export default function ManageProfile() {
           <div style={{ color: "#999" }}> </div>
         </div>
         {/* -------------------------------Image Uploader--------------- */}
-        <button className="container ">
-          <button className="snip1547" onClick={updateSellerProfile}>
-            <span>Submit</span>
+        <button
+          style={{ display: "flex", alignItems: "center" }}
+          disabled={loading}
+        >
+          <button
+            className="snip1547"
+            onClick={updateSellerProfile}
+            style={{ margin: 1, position: "relative" }}
+          >
+            <span style={{ padding: "10px 20px" }}>Submit</span>
+            {loading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: grey[900],
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
           </button>
         </button>
       </div>

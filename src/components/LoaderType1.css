@@ -1,0 +1,65 @@
+.center-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  /****** center box
+	width: 300px;
+	height: 300px;
+	border: solid 1px #aaa;
+	******/
+}
+body {
+  background-color: #202628;
+}
+.loader-square-3 {
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  transform: rotate(45deg);
+  display: inline-block;
+  position: relative;
+}
+.loader-square-3:before {
+  content: "";
+  display: block;
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  animation: anm-sq-3-rotate 3s infinite;
+}
+@keyframes anm-sq-3-rotate {
+  0% {
+    transform-origin: bottom left;
+    transform: translate(0, -25px) rotate(0deg);
+  }
+  25% {
+    transform-origin: bottom left;
+    transform: translate(0, -25px) rotate(-180deg);
+  }
+  26% {
+    transform-origin: top left;
+    transform: translate(0, 25px) rotate(-180deg);
+  }
+  50% {
+    transform-origin: top left;
+    transform: translate(0, 25px) rotate(-360deg);
+  }
+  51% {
+    transform-origin: top right;
+    transform: translate(0, 25px) rotate(-360deg);
+  }
+  75% {
+    transform-origin: top right;
+    transform: translate(0, 25px) rotate(-540deg);
+  }
+  76% {
+    transform-origin: bottom right;
+    transform: translate(0, -25px) rotate(-540deg);
+  }
+  100% {
+    transform-origin: bottom right;
+    transform: translate(0, -25px) rotate(-720deg);
+  }
+}

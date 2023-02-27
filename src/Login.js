@@ -99,13 +99,13 @@ export default function Login() {
                     Password
                   </div>
                   <div>
-                    <a
+                    <Link
                       className="text-xs font-display font-semibold text-indigo-600 hover:text-indigo-800
                                         cursor-pointer"
-                      href="/forgot-password"
+                      to="/forgot-password"
                     >
                       Forgot Password?
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <input
@@ -128,12 +128,12 @@ export default function Login() {
               </div>
               <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
                 Don't have an account ?{" "}
-                <a
+                <Link
                   className="cursor-pointer text-indigo-600 hover:text-indigo-800"
-                  href="/signup"
+                  to="/signup"
                 >
                   Sign up
-                </a>
+                </Link>
               </div>
             </div>
           </div>

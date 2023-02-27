@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.9",
+    "@mui/material": "^5.11.10",
+    "@mui/x-data-grid": "^5.17.25",
+    "@mui/x-data-grid-generator": "^5.17.25",
     "@progress/kendo-react-buttons": "^5.9.0",
     "@progress/kendo-react-charts": "^5.9.0",
     "@progress/kendo-react-dropdowns": "^5.9.0",

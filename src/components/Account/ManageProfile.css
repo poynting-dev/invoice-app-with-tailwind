@@ -19,7 +19,7 @@
 .snip1547 span {
   background-color: #c72544;
   border-radius: 5px 0 0 5px;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   -webkit-transition: all 0.15s ease-in;
   transition: all 0.15s ease-in;
 }

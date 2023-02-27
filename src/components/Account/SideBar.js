@@ -82,7 +82,7 @@ export default function SideBar({ content }) {
             <Link to="/">
               <img
                 className="w-10 h-auto"
-                src="public\invoice_icon.png"
+                src="/invoice_icon.png"
                 alt="invoice-icon"
               />
             </Link>
@@ -153,7 +153,7 @@ export default function SideBar({ content }) {
               <Link to="/">
                 <img
                   className="w-10 h-auto"
-                  src="public\invoice_icon.png"
+                  src="/invoice_icon.png"
                   alt="invoice-icon"
                 />
               </Link>
@@ -343,7 +343,7 @@ export default function SideBar({ content }) {
                       </svg>
                       <img
                         className="w-24 h-auto"
-                        src="public\invoice_icon.png"
+                        src="/invoice_icon.png"
                         alt="invoice-icon"
                       />
                     </Link>
