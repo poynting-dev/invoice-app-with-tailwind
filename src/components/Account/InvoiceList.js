@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Timestamp,
   collection,
   doc,
   onSnapshot,
@@ -25,6 +26,7 @@ import { createFakeServer } from "@mui/x-data-grid-generator";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import LoaderType1 from "../LoaderType1";
+import convertDateToString from "../convertDateToString";
 
 const PAGE_SIZE = 5;
 
@@ -82,7 +84,7 @@ function InvoiceList() {
             </Link>
             {/*Code Block for indigo tooltip starts*/}
 
-            <Popover
+            {/* <Popover
               id="mouse-over-popover"
               sx={{
                 pointerEvents: "none",
@@ -163,7 +165,7 @@ function InvoiceList() {
                   </div>
                 </div>
               </div>
-            </Popover>
+            </Popover> */}
             {/*Code Block for indigo tooltip ends*/}
           </Typography>
         );
@@ -198,14 +200,16 @@ function InvoiceList() {
       headerName: "Invoice Date",
       minWidth: 250,
       flex: 1,
+      renderCell: (params) => params.row.invoiceDate,
     },
     {
       field: "dueDate",
       headerName: "Due Date",
       minWidth: 250,
       flex: 1,
+      renderCell: (params) => params.row.dueDate,
     },
-    // { field: 'title', headerName: 'Title', width: 300 },
+    { field: "title", headerName: "Title", width: 300 },
   ];
   const mapPageToNextCursor = React.useRef({});
 
@@ -323,10 +327,16 @@ function InvoiceList() {
     );
     onSnapshot(queryInvoices, (snapshot) => {
       // --------------
-      var invoicesRef = db
-        .collection("invoices")
-        .doc("5eEacX2iOIJAzpJYBRtv")
-        .collection("invoicesList");
+
+      const now = new Date();
+      const istTime = now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+      const istDate = new Date(istTime);
+      const istTimestamp = Timestamp.fromDate(istDate);
+      console.log("Time:-" + istTimestamp.toDate().toDateString());
+      // var invoicesRef = db
+      //   .collection("invoices")
+      //   .doc("5eEacX2iOIJAzpJYBRtv")
+      //   .collection("invoicesList");
 
       // invoicesRef.onSnapshot(function (snapshot) {
       //   snapshot.forEach(function (doc) {
@@ -345,7 +355,12 @@ function InvoiceList() {
           db,
           `invoices/${userUniqueID}/invoicesList`
         );
-        const queryInvoicesList = query(invoiceRef);
+
+        const queryInvoicesList = query(
+          invoiceRef,
+          orderBy("invoiceDate", "desc") // sort by invoiceDate in descending order
+        );
+
         onSnapshot(queryInvoicesList, (snapshot) => {
           const invoices = snapshot.docs.map((doc) => ({
             ...doc.data(),
@@ -421,7 +436,7 @@ function InvoiceList() {
 
   return (
     <div className="font-sans p-5 pt-0 h-full bg-gray-100">
-      {showLoader && <LoaderType1 />}
+      {showLoader ? <LoaderType1 /> : ""}
       <div className="md:flex md:justify-between">
         <ComposeButton />
         <h1 className="text-3xl mb-2 items-end flex place-content-center">
@@ -482,7 +497,9 @@ function InvoiceList() {
                       {invoiceNo ? invoiceNo : "No ID Exist"}
                     </Link>
                   </div>
-                  <div className="text-sm font-semibold ">{invoiceDate}</div>
+                  <div className="text-sm font-semibold ">
+                    {/* {invoiceDate.toDate().toDateString()} */}
+                  </div>
                   <div>
                     <span className="group-hover:text-white p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
                       Delivered
@@ -556,152 +573,152 @@ const ComposeButton = () => {
   );
 };
 
-const InvoiceTableWithoutPagination = ({ invoices }) => {
-  return (
-    <div className="rounded-lg shadow hidden md:block">
-      <table className="w-full  relative">
-        <thead className="bg-gray-50 border-b-2 border-gray-200">
-          <tr>
-            <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
-              No.
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Total (excl. GST)
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              GST. Incl.
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Date
-            </th>
-            <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
-              Total
-            </th>
-            <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
-              Status
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100 ">
-          {invoices.length === 0 ? (
-            <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-              No Invoices
-            </td>
-          ) : (
-            invoices.map(
-              ({
-                id,
-                invoiceNo,
-                GSTTotal,
-                TotalWithGST,
-                dueDate,
-                invoiceDate,
-              }) => (
-                <tr className="bg-white " key={id}>
-                  <td
-                    className="p-3 text-sm text-gray-700 whitespace-nowrap"
-                    onMouseEnter={() => setTooltipStatus(id)}
-                    onMouseLeave={() => setTooltipStatus(0)}
-                  >
-                    <Link
-                      to={`/view/${id}`}
-                      className="font-bold text-blue-500 hover:underline"
-                    >
-                      {invoiceNo ? invoiceNo : "No ID Exist"}
-                    </Link>
+// const InvoiceTableWithoutPagination = ({ invoices }) => {
+//   return (
+//     <div className="rounded-lg shadow hidden md:block">
+//       <table className="w-full  relative">
+//         <thead className="bg-gray-50 border-b-2 border-gray-200">
+//           <tr>
+//             <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
+//               No.
+//             </th>
+//             <th className="p-3 text-sm font-semibold tracking-wide text-left">
+//               Total (excl. GST)
+//             </th>
+//             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+//               GST. Incl.
+//             </th>
+//             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+//               Date
+//             </th>
+//             <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+//               Total
+//             </th>
+//             <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+//               Status
+//             </th>
+//           </tr>
+//         </thead>
+//         <tbody className="divide-y divide-gray-100 ">
+//           {invoices.length === 0 ? (
+//             <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//               No Invoices
+//             </td>
+//           ) : (
+//             invoices.map(
+//               ({
+//                 id,
+//                 invoiceNo,
+//                 GSTTotal,
+//                 TotalWithGST,
+//                 dueDate,
+//                 invoiceDate,
+//               }) => (
+//                 <tr className="bg-white " key={id}>
+//                   <td
+//                     className="p-3 text-sm text-gray-700 whitespace-nowrap"
+//                     onMouseEnter={() => setTooltipStatus(id)}
+//                     onMouseLeave={() => setTooltipStatus(0)}
+//                   >
+//                     <Link
+//                       to={`/view/${id}`}
+//                       className="font-bold text-blue-500 hover:underline"
+//                     >
+//                       {invoiceNo ? invoiceNo : "No ID Exist"}
+//                     </Link>
 
-                    {/*Code Block for indigo tooltip starts*/}
-                    <div className="relative my-28 md:my-0 ">
-                      {tooltipStatus == id && (
-                        <div
-                          role="tooltip"
-                          className="z-20 -mt-20 w-78 absolute transition duration-150 ease-in-out left-0 ml-24 shadow-lg bg-indigo-700 p-4 rounded"
-                        >
-                          <svg
-                            className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                            width="9px"
-                            height="16px"
-                            viewBox="0 0 9 16"
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                          >
-                            <g
-                              id="Page-1"
-                              stroke="none"
-                              strokeWidth={1}
-                              fill="none"
-                              fillRule="evenodd"
-                            >
-                              <g
-                                id="Tooltips-"
-                                transform="translate(-874.000000, -1029.000000)"
-                                fill="#4c51bf"
-                              >
-                                <g
-                                  id="Group-3-Copy-16"
-                                  transform="translate(850.000000, 975.000000)"
-                                >
-                                  <g
-                                    id="Group-2"
-                                    transform="translate(24.000000, 0.000000)"
-                                  >
-                                    <polygon
-                                      id="Triangle"
-                                      transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                      points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                                    />
-                                  </g>
-                                </g>
-                              </g>
-                            </g>
-                          </svg>
-                          <p className="text-sm font-bold text-white pb-1">
-                            Keep track of follow ups
-                          </p>
-                          <p className="text-xs leading-4 text-white pb-3">
-                            Reach out to more prospects at the right moment.
-                          </p>
-                          <div className="flex justify-between">
-                            <div className="flex items-center">
-                              <span className="text-xs font-bold text-white">
-                                Step 1 of 4
-                              </span>
-                            </div>
-                            <div className="flex items-center">
-                              <button className="bg-white transition duration-150 ease-in-out focus:outline-none hover:bg-gray-200 rounded text-indigo-700 px-5 py-1 text-xs">
-                                Next
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {/*Code Block for indigo tooltip ends*/}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                    {TotalWithGST}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                    {GSTTotal}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                    {invoiceDate}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                    {dueDate}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                    <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
-                      Delivered
-                    </span>
-                  </td>
-                </tr>
-              )
-            )
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+//                     {/*Code Block for indigo tooltip starts*/}
+//                     <div className="relative my-28 md:my-0 ">
+//                       {tooltipStatus == id && (
+//                         <div
+//                           role="tooltip"
+//                           className="z-20 -mt-20 w-78 absolute transition duration-150 ease-in-out left-0 ml-24 shadow-lg bg-indigo-700 p-4 rounded"
+//                         >
+//                           <svg
+//                             className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
+//                             width="9px"
+//                             height="16px"
+//                             viewBox="0 0 9 16"
+//                             version="1.1"
+//                             xmlns="http://www.w3.org/2000/svg"
+//                             xmlnsXlink="http://www.w3.org/1999/xlink"
+//                           >
+//                             <g
+//                               id="Page-1"
+//                               stroke="none"
+//                               strokeWidth={1}
+//                               fill="none"
+//                               fillRule="evenodd"
+//                             >
+//                               <g
+//                                 id="Tooltips-"
+//                                 transform="translate(-874.000000, -1029.000000)"
+//                                 fill="#4c51bf"
+//                               >
+//                                 <g
+//                                   id="Group-3-Copy-16"
+//                                   transform="translate(850.000000, 975.000000)"
+//                                 >
+//                                   <g
+//                                     id="Group-2"
+//                                     transform="translate(24.000000, 0.000000)"
+//                                   >
+//                                     <polygon
+//                                       id="Triangle"
+//                                       transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
+//                                       points="4.5 57.5 12.5 66.5 -3.5 66.5"
+//                                     />
+//                                   </g>
+//                                 </g>
+//                               </g>
+//                             </g>
+//                           </svg>
+//                           <p className="text-sm font-bold text-white pb-1">
+//                             Keep track of follow ups
+//                           </p>
+//                           <p className="text-xs leading-4 text-white pb-3">
+//                             Reach out to more prospects at the right moment.
+//                           </p>
+//                           <div className="flex justify-between">
+//                             <div className="flex items-center">
+//                               <span className="text-xs font-bold text-white">
+//                                 Step 1 of 4
+//                               </span>
+//                             </div>
+//                             <div className="flex items-center">
+//                               <button className="bg-white transition duration-150 ease-in-out focus:outline-none hover:bg-gray-200 rounded text-indigo-700 px-5 py-1 text-xs">
+//                                 Next
+//                               </button>
+//                             </div>
+//                           </div>
+//                         </div>
+//                       )}
+//                     </div>
+//                     {/*Code Block for indigo tooltip ends*/}
+//                   </td>
+//                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//                     {TotalWithGST}
+//                   </td>
+//                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//                     {GSTTotal}
+//                   </td>
+//                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//                     {invoiceDate}
+//                   </td>
+//                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//                     {dueDate}
+//                   </td>
+//                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+//                     <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+//                       Delivered
+//                     </span>
+//                   </td>
+//                 </tr>
+//               )
+//             )
+//           )}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// };

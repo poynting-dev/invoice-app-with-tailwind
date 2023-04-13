@@ -3,6 +3,8 @@ import { useState } from "react";
 import Dashboard from "../../Dashboard";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetUserUniqueID } from "../../state/action-creators";
 
 export default function SideBar({ content }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,14 +14,15 @@ export default function SideBar({ content }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const dispatch = useDispatch();
 
   async function handleLogout() {
     // setError("");
 
     try {
-      await logout();
-
-      navigate("/login");
+      // await logout();
+      // navigate("/login");
+      dispatch(resetUserUniqueID());
     } catch {
       // setError("Failed to log out");
     }
@@ -328,19 +331,6 @@ export default function SideBar({ content }) {
                   {/* <!-- Logo --> */}
                   <div className="flex items-center justify-center flex-shrink-0 py-10">
                     <Link to="#">
-                      <svg
-                        className="text-indigo-600"
-                        width="96"
-                        height="53"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M7.691 34.703L13.95 28.2 32.09 52h8.087L18.449 23.418 38.594.813h-8.157L7.692 26.125V.812H.941V52h6.75V34.703zm27.61-7.793h17.156v-5.308H35.301v5.308zM89.19 13v22.512c0 3.703-1.02 6.574-3.058 8.613-2.016 2.04-4.934 3.059-8.754 3.059-3.773 0-6.68-1.02-8.719-3.059-2.039-2.063-3.058-4.945-3.058-8.648V.813h-6.68v34.874c.047 5.297 1.734 9.458 5.062 12.481 3.328 3.023 7.793 4.535 13.395 4.535l1.793-.07c5.156-.375 9.234-2.098 12.234-5.168 3.024-3.07 4.547-7.02 4.57-11.848V13h-6.785zM89 8h7V1h-7v7z"
-                        />
-                      </svg>
                       <img
                         className="w-24 h-auto"
                         src="/invoice_icon.png"

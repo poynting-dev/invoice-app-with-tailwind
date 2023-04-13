@@ -68,7 +68,7 @@ export default function Dashboard() {
     gst: 18,
   });
 
-  const [id, setID] = useState(3);
+  const [id, setID] = useState(0);
 
   const [TotalWithGST, setTotalWithGST] = useState(0);
   const [GSTTotal, setGSTTotal] = useState(0);
@@ -157,8 +157,8 @@ export default function Dashboard() {
           items: items,
           billing: billing,
           from: from,
-          invoiceDate: invoiceDate,
-          dueDate: dueDate,
+          invoiceDate: Timestamp.fromDate(new Date(invoiceDate)),
+          dueDate: Timestamp.fromDate(new Date(dueDate)),
           TotalWithGST: TotalWithGST,
           GSTTotal: GSTTotal,
         })

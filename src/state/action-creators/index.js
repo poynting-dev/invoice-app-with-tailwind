@@ -43,6 +43,14 @@ export const fetchUserUniqueID = (email) => {
   };
 };
 
+export const RESET_USER_ID = "RESET_USER_ID";
+
+// define the new action creator
+export const resetUserUniqueID = () => ({
+  type: RESET_USER_ID,
+  id: null,
+});
+
 export const mapDispatchToProps = (dispatch) => ({
   addInvoice: (invoice) => dispatch(addInvoice(invoice)),
   updateInvoice: (id, updates) => dispatch(updateInvoice(id, updates)),
@@ -50,4 +58,5 @@ export const mapDispatchToProps = (dispatch) => ({
   setUserProfile: (profile) => dispatch(setUserProfile(profile)),
   setUniqueUserID: (id) => dispatch(setUniqueUserID(id)),
   fetchUserUniqueID,
+  resetUserUniqueID: () => dispatch(resetUserUniqueID()),
 });

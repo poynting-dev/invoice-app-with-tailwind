@@ -31,6 +31,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useSelector } from "react-redux";
 import { store } from "../../state/store";
 import { actionCreators } from "../../state";
+import convertDateToString from "../convertDateToString";
 
 export default function ViewInvoice() {
   // ------------------------------------------
@@ -88,7 +89,10 @@ export default function ViewInvoice() {
           if (doc.exists) {
             console.log(doc.data());
             let getData = doc.data();
-            setFormData({ formData, ...getData });
+            setFormData({
+              formData,
+              ...getData,
+            });
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");

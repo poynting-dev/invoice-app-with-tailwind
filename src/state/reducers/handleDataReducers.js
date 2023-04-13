@@ -33,6 +33,11 @@ const userUniqueID = (state = null, action) => {
       console.log("option1");
       return action.id;
     }
+    case "RESET_USER_ID": {
+      // handle the new action type
+      console.log("resetting userUniqueID to null");
+      return null;
+    }
     default: {
       console.log("option2");
       return state;
