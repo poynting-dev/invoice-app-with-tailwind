@@ -32,8 +32,77 @@ import { useSelector } from "react-redux";
 import { store } from "../../state/store";
 import { actionCreators } from "../../state";
 import convertDateToString from "../convertDateToString";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import emailjs from "emailjs-com";
 
 export default function ViewInvoice() {
+  function sendEmail(e) {
+    // e.preventDefault();
+    const {
+      GSTTotal,
+      dueDate,
+      items,
+      from,
+      TotalWithGST,
+      invoiceDate,
+      invoiceNo,
+      billing,
+    } = formData;
+
+    console.log(
+      GSTTotal,
+      " ",
+      dueDate,
+      " ",
+      items,
+      " ",
+      from,
+      " ",
+      TotalWithGST,
+      " ",
+      invoiceDate,
+      " ",
+      invoiceNo,
+      " ",
+      billing
+    );
+    console.log(invoiceDate);
+    console.log(invoiceNo);
+    // emailjs
+    //   .send(
+    //     {
+    //       GSTTotal: GSTTotal,
+    //       dueDate: dueDate,
+    //       items: items,
+    //       from: from,
+    //       TotalWithGST: TotalWithGST,
+    //       invoiceDate: invoiceDate,
+    //       invoiceNo: invoiceNo,
+    //       billName: billing.name,
+    //       billAddress: billing.address,
+    //       billExtra: billing.extra,
+    //       fromName: from.name,
+    //       fromAddress: from.address,
+    //       fromExtra: from.extra,
+    //     },
+    //   )
+    //   .then(
+    //     (result) => {
+    //       console.log(result.text);
+    //     },
+    //     (error) => {
+    //       console.log(error.text);
+    //     }
+    //   );
+  }
+
+  function SendPDFButton() {
+    return (
+      <button onClick={(formdata) => sendEmail(formData)}>Send PDF</button>
+    );
+  }
+
   // ------------------------------------------
   const ddData = [
     { text: "A4", value: "size-a4" },
@@ -89,6 +158,11 @@ export default function ViewInvoice() {
           if (doc.exists) {
             console.log(doc.data());
             let getData = doc.data();
+            let data = getData.invoiceDate;
+            getData.invoiceDate = convertDateToString(data);
+            data = getData.dueDate;
+            getData.dueDate = convertDateToString(data);
+            console.log(getData);
             setFormData({
               formData,
               ...getData,
@@ -151,7 +225,11 @@ export default function ViewInvoice() {
     var content = document.getElementsByClassName("invoiceDiv");
     var pri = document.getElementById("invoiceDiv").contentWindow;
     pri.document.open();
+    pri.document.write(
+      '<html><head><style>@media print { .page { size: 1100px 710px; } }</style></head><body><div class="page">'
+    );
     pri.document.write(content.innerHTML);
+    pri.document.write("</div></body></html>");
     pri.document.close();
     pri.focus();
     pri.print();
@@ -185,9 +263,10 @@ export default function ViewInvoice() {
             <i className="fa fa-file-pdf-o"></i> Export as PDF
           </button>
           <hr />
+          <SendPDFButton />
         </div>
       </div>
-      <PDFExport ref={pdfExportComponent}>
+      <PDFExport ref={pdfExportComponent} paperSize="A2">
         <div className="card invoiceDiv">
           <div className="card-body">
             <div id="invoice">
@@ -235,9 +314,13 @@ export default function ViewInvoice() {
                           INVOICE {formData.invoiceNo}
                         </h1>
                         <div className="date">
-                          Date of Invoice: {formData.invoiceDate}
+                          <strong>Date of Invoice:</strong>
+                          {formData.invoiceDate}
                         </div>
-                        <div className="date">Due Date: {formData.dueDate}</div>
+                        <div className="date">
+                          <strong>Due Date: </strong>
+                          {formData.dueDate}
+                        </div>
                       </div>
                     </div>
                     <table>
@@ -254,7 +337,7 @@ export default function ViewInvoice() {
                         {formData.items.map(
                           ({ id, name, qty, total, gst, rate }) => (
                             <tr key={id}>
-                              <td className="no">{id}</td>
+                              <td className="no">{id + 1}</td>
                               <td className="text-left">
                                 <h3>{name}</h3>
                               </td>
@@ -269,7 +352,7 @@ export default function ViewInvoice() {
                         <tr>
                           <td colSpan="2"></td>
                           <td colSpan="2">SUBTOTAL</td>
-                          <td>{formData.TotalWithGST}</td>
+                          <td> Rs. {formData.TotalWithGST}</td>
                         </tr>
                         <tr>
                           <td colSpan="2"></td>
@@ -280,7 +363,7 @@ export default function ViewInvoice() {
                           <td colSpan="2"></td>
                           <td colSpan="2">GRAND TOTAL</td>
                           <td>
-                            Rs.
+                            Rs.{" "}
                             {Number(formData.TotalWithGST) +
                               Number(formData.GSTTotal)}
                           </td>

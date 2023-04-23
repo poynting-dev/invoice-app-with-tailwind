@@ -22,8 +22,8 @@ export default function LoaderType1() {
         // onClick={handleClose}
       >
         {/* <CircularProgress color="inherit" /> */}
-        <div class="center-body">
-          <div class="loader-square-3"></div>
+        <div className="center-body">
+          <div className="loader-square-3"></div>
         </div>
       </Backdrop>
     </>

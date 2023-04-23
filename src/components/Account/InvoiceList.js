@@ -173,6 +173,22 @@ function InvoiceList() {
       flex: 1,
     },
     {
+      field: "Status",
+      headerName: "Status",
+      minWidth: 125,
+      flex: 1,
+      renderCell: (params) => {
+        const linkValue = params.row.id;
+        return (
+          <div>
+            <span className="group-hover:text-white p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+              Delivered
+            </span>
+          </div>
+        );
+      },
+    },
+    {
       field: "TotalWithGST",
       headerName: "Total (excl. GST)",
       minWidth: 125,
@@ -200,14 +216,14 @@ function InvoiceList() {
       headerName: "Invoice Date",
       minWidth: 250,
       flex: 1,
-      renderCell: (params) => params.row.invoiceDate,
+      renderCell: (params) => convertDateToString(params.row.invoiceDate),
     },
     {
       field: "dueDate",
       headerName: "Due Date",
       minWidth: 250,
       flex: 1,
-      renderCell: (params) => params.row.dueDate,
+      renderCell: (params) => convertDateToString(params.row.dueDate),
     },
     { field: "title", headerName: "Title", width: 300 },
   ];

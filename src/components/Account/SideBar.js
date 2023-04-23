@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useState } from "react";
 import Dashboard from "../../Dashboard";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetUserUniqueID } from "../../state/action-creators";
+import { Alert, Button } from "react-bootstrap";
 
 export default function SideBar({ content }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,13 +17,15 @@ export default function SideBar({ content }) {
   const { currentUser, logout } = useAuth();
   const dispatch = useDispatch();
 
+  const [error, setError] = useState("");
+
   async function handleLogout() {
     // setError("");
 
     try {
-      // await logout();
-      // navigate("/login");
+      await logout();
       dispatch(resetUserUniqueID());
+      navigate("/login");
     } catch {
       // setError("Failed to log out");
     }
@@ -639,7 +642,33 @@ export default function SideBar({ content }) {
           className="fixed inset-y-0 right-0 w-64 bg-white border-l border-indigo-100 rounded-l-3xl"
         >
           <div className="px-4 py-8">
-            <h2 className="text-lg font-semibold">Settings</h2>
+            <h2 className="text-lg font-semibold">Profile</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+            {currentUser.displayName == null ? (
+              "null"
+            ) : (
+              <>
+                <strong>User Name: </strong>
+                {currentUser.displayName}
+              </>
+            )}
+            <br />
+            <strong>Email: </strong>
+            {currentUser.email}
+            {/* {JSON.stringify(currentUser)} */}
+
+            <Link
+              to="/update-profile"
+              className="btn btn-primary w-100 mt-3 d-flex align-items-center"
+            >
+              Update Profile
+            </Link>
+            <a
+              className="btn btn-primary w-100 mt-3 d-flex align-items-center"
+              onClick={handleLogout}
+            >
+              Log Out
+            </a>
           </div>
         </section>
       )}

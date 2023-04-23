@@ -31,9 +31,9 @@ export const InvoiceDate = ({
       <DatePicker
         isOpen={isOpen1}
         onClose={() => setIsOpen1(false)}
-        defaultValue={new Date(2022, 8, 8)}
+        defaultValue={new Date(Date.now())}
         // minDate={new Date()}
-        maxDate={new Date()}
+        maxDate={new Date(Date.now())}
         headerFormat="DD, MM dd"
         onChange={(date) =>
           setInvoiceDate(date.toLocaleDateString("en-IN", options))
@@ -68,7 +68,7 @@ export const DueDate = ({ dueDate, setDueDate, isOpen2, setIsOpen2 }) => {
         <DatePicker
           isOpen={isOpen2}
           onClose={() => setIsOpen2(false)}
-          defaultValue={new Date(2022, 8, 8)}
+          defaultValue={new Date()}
           minDate={new Date()}
           // maxDate={new Date(2023, 0, 10)}
           headerFormat="DD, MM dd"
