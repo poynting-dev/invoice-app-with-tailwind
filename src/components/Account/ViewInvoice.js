@@ -67,34 +67,189 @@ export default function ViewInvoice() {
       " ",
       billing
     );
-    console.log(invoiceDate);
-    console.log(invoiceNo);
-    // emailjs
-    //   .send(
-    //     {
-    //       GSTTotal: GSTTotal,
-    //       dueDate: dueDate,
-    //       items: items,
-    //       from: from,
-    //       TotalWithGST: TotalWithGST,
-    //       invoiceDate: invoiceDate,
-    //       invoiceNo: invoiceNo,
-    //       billName: billing.name,
-    //       billAddress: billing.address,
-    //       billExtra: billing.extra,
-    //       fromName: from.name,
-    //       fromAddress: from.address,
-    //       fromExtra: from.extra,
-    //     },
-    //   )
-    //   .then(
-    //     (result) => {
-    //       console.log(result.text);
-    //     },
-    //     (error) => {
-    //       console.log(error.text);
-    //     }
-    //   );
+
+    // const dataArray = ["Item 1", "Item 2", "Item 3"];
+
+    function generateEmailContent(items) {
+      let content = `<table border="1" style="font-size: 12pt;" summary="Invoice Table" width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+          <tr style="background-color: rgb(222, 234, 246);">
+              <td valign="bottom" width="8.24742268041237%" style="text-align: center;">
+                  <p><span ><strong>Item#&nbsp;</strong></span></p>
+              </td>
+              <td valign="bottom" width="39.175257731958766%" style="width: 27.2072%; text-align: center;">
+                  <p><span ><strong>Description&nbsp;</strong></span></p>
+              </td>
+              <td valign="bottom" width="15.463917525773196%" style="width: 17.7872%; text-align: center;">
+                  <p><span ><strong>Rate&nbsp;</strong></span></p>
+              </td>
+              <td valign="bottom" width="6.185567010309279%" style="width: 13.6768%; text-align: center;">
+                  <p><strong><span >Qty.&nbsp;</span></strong></p>
+              </td>
+              <td valign="bottom" width="15.463917525773196%" style="width: 14.8517%; text-align: center;">
+                  <p><span class="fr-unprocessed text-12 text-base" ><strong>GST (%)</strong></span></p>
+              </td>
+              <td valign="bottom" width="15.463917525773196%" style="width: 26.7455%; text-align: center;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+          </tr>
+      </thead>
+      <tbody>
+      ${items
+        .map(
+          (item, index) => `<tr>
+        <td valign="top" width="6.185567010309279%">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${index}&nbsp;</strong></strong></span></span></p>
+        </td>
+        <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.name}&nbsp;</strong></strong></span></span></p>
+        </td>
+        <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.rate}&nbsp;</strong></strong></span></span></p>
+        </td>
+        <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.qty}&nbsp;</strong></strong></span></span></p>
+        </td>
+        <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.gst}&nbsp;</strong></strong></span></span></p>
+        </td>
+        <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.total}&nbsp;</strong></strong></span></span></p>
+        </td>
+    </tr>`
+        )
+        .join("")}
+           <td valign="top" width="6.185567010309279%">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+          </tr>
+          <tr>
+              <td valign="top" width="6.185567010309279%">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Total Discount&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>0&nbsp;</strong></strong></span></span></p>
+              </td>
+          </tr>
+          <tr>
+              <td valign="top" width="6.185567010309279%">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Subtotal&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${TotalWithGST}</strong></strong></span></span></p>
+              </td>
+          </tr>
+          <tr>
+              <td valign="top" width="6.185567010309279%">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Sales Tax&nbsp;</strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${GSTTotal}</strong></strong></span></span></p>
+              </td>
+          </tr>
+          <tr style="background-color: rgba(156,194,229,255);">
+              <td valign="top" width="6.185567010309279%">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
+              </td>
+              <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
+                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${parseFloat(
+                    parseFloat(TotalWithGST) + parseFloat(GSTTotal)
+                  ).toFixed(
+                    2
+                  )}</strong></strong></span></span></p></td></tr></tbody></table>
+`;
+      return content;
+    }
+
+    emailjs
+      .send({
+        invoiceHeadingNo: invoiceNo.toString(),
+        InvoiceDate: invoiceDate.toString(),
+        invoiceNumber: invoiceNo,
+        message: generateEmailContent(items),
+        GSTTotal: GSTTotal,
+        dueDate: dueDate,
+        items: items,
+        from: from,
+        TotalWithGST: TotalWithGST,
+        billName: billing.name,
+        billAddress: billing.address,
+        billExtra: billing.extra,
+        fromName: from.name,
+        fromAddress: from.address,
+        fromExtra: from.extra,
+      })
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
   }
 
   function SendPDFButton() {
