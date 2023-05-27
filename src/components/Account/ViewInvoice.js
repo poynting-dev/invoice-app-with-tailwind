@@ -87,10 +87,10 @@ export default function ViewInvoice() {
                   <p><strong><span >Qty.&nbsp;</span></strong></p>
               </td>
               <td valign="bottom" width="15.463917525773196%" style="width: 14.8517%; text-align: center;">
-                  <p><span class="fr-unprocessed text-12 text-base" ><strong>GST (%)</strong></span></p>
+                  <p><span className="fr-unprocessed text-12 text-base" ><strong>GST (%)</strong></span></p>
               </td>
               <td valign="bottom" width="15.463917525773196%" style="width: 26.7455%; text-align: center;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
               </td>
           </tr>
       </thead>
@@ -99,123 +99,123 @@ export default function ViewInvoice() {
         .map(
           (item, index) => `<tr>
         <td valign="top" width="6.185567010309279%">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${index}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${index}&nbsp;</strong></strong></span></span></p>
         </td>
         <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.name}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${item.name}&nbsp;</strong></strong></span></span></p>
         </td>
         <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.rate}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${item.rate}&nbsp;</strong></strong></span></span></p>
         </td>
         <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.qty}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${item.qty}&nbsp;</strong></strong></span></span></p>
         </td>
         <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.gst}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${item.gst}&nbsp;</strong></strong></span></span></p>
         </td>
         <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-            <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${item.total}&nbsp;</strong></strong></span></span></p>
+            <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${item.total}&nbsp;</strong></strong></span></span></p>
         </td>
     </tr>`
         )
         .join("")}
            <td valign="top" width="6.185567010309279%">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
           </tr>
           <tr>
               <td valign="top" width="6.185567010309279%">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Total Discount&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>Total Discount&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>0&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>0&nbsp;</strong></strong></span></span></p>
               </td>
           </tr>
           <tr>
               <td valign="top" width="6.185567010309279%">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Subtotal&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>Subtotal&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${TotalWithGST}</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${TotalWithGST}</strong></strong></span></span></p>
               </td>
           </tr>
           <tr>
               <td valign="top" width="6.185567010309279%">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>Sales Tax&nbsp;</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>Sales Tax&nbsp;</strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${GSTTotal}</strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${GSTTotal}</strong></strong></span></span></p>
               </td>
           </tr>
           <tr style="background-color: rgba(156,194,229,255);">
               <td valign="top" width="6.185567010309279%">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
               </td>
               <td valign="top" width="8.24742268041237%" style="width: 27.2072%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
               </td>
               <td valign="top" width="39.175257731958766%" style="width: 17.7872%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 13.6768%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>&nbsp;</strong></strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 14.8517%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong><strong>Total&nbsp;</strong></strong></strong></span></span></p>
               </td>
               <td valign="top" width="15.463917525773196%" style="width: 26.7455%;">
-                  <p><span ><span class="fr-unprocessed text-12 text-base" ><strong><strong>${parseFloat(
+                  <p><span ><span className="fr-unprocessed text-12 text-base" ><strong><strong>${parseFloat(
                     parseFloat(TotalWithGST) + parseFloat(GSTTotal)
                   ).toFixed(
                     2
@@ -381,7 +381,7 @@ export default function ViewInvoice() {
     var pri = document.getElementById("invoiceDiv").contentWindow;
     pri.document.open();
     pri.document.write(
-      '<html><head><style>@media print { .page { size: 1100px 710px; } }</style></head><body><div class="page">'
+      '<html><head><style>@media print { .page { size: 1100px 710px; } }</style></head><body><div className="page">'
     );
     pri.document.write(content.innerHTML);
     pri.document.write("</div></body></html>");
@@ -485,6 +485,7 @@ export default function ViewInvoice() {
                           <th className="text-left">DESCRIPTION</th>
                           <th className="text-right">RATE</th>
                           <th className="text-right">QUANTITY</th>
+                          <th className="text-right">GST(%)</th>
                           <th className="text-right">TOTAL</th>
                         </tr>
                       </thead>
@@ -498,6 +499,9 @@ export default function ViewInvoice() {
                               </td>
                               <td className="unit">{rate}</td>
                               <td className="qty">{qty}</td>
+                              <td className="qty">
+                                {parseFloat(gst).toFixed(1)}%
+                              </td>
                               <td className="total">Rs. {total}</td>
                             </tr>
                           )
@@ -505,17 +509,17 @@ export default function ViewInvoice() {
                       </tbody>
                       <tfoot>
                         <tr>
-                          <td colSpan="2"></td>
+                          <td colSpan="3"></td>
                           <td colSpan="2">SUBTOTAL</td>
                           <td> Rs. {formData.TotalWithGST}</td>
                         </tr>
                         <tr>
-                          <td colSpan="2"></td>
+                          <td colSpan="3"></td>
                           <td colSpan="2">TAX (GST)</td>
                           <td>Rs. {formData.GSTTotal}</td>
                         </tr>
                         <tr>
-                          <td colSpan="2"></td>
+                          <td colSpan="3"></td>
                           <td colSpan="2">GRAND TOTAL</td>
                           <td>
                             Rs.{" "}

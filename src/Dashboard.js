@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import React, { useState, useEffect, createRef, Fragment } from "react";
+import { Form, Button, Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -19,6 +19,19 @@ import { AddressComponent } from "./components/Account/Invoice_HomePage/AddressC
 import { InvoiceTableHeading } from "./components/Account/Invoice_HomePage/TableComponent";
 import { NavBar } from "./components/Account/NavBar";
 import SideBar from "./components/Account/SideBar";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  IconButton,
+  Slide,
+  Snackbar,
+} from "@mui/material";
+import Stack from "@mui/material/Stack";
+import { GridCloseIcon } from "@mui/x-data-grid";
+import MuiAlert from "@mui/material/Alert";
+import CustomizedSnackbars from "./components/CustomizedSnackbars";
+import AlertDialogSlide from "./components/AlertDialogSlide";
 
 var options = {
   weekday: "long",
@@ -56,8 +69,18 @@ export default function Dashboard() {
     new Date().toLocaleDateString("en-IN", options)
   );
 
-  const [billing, setBilling] = useState({ name: "", address: "", extra: "" });
-  const [from, setFrom] = useState({ name: "", address: "", extra: "" });
+  const [billing, setBilling] = useState({
+    email: "",
+    name: "",
+    address: "",
+    extra: "",
+  });
+  const [from, setFrom] = useState({
+    email: "",
+    name: "",
+    address: "",
+    extra: "",
+  });
 
   const [singleItem, setSingleItem] = useState({
     id: null,
@@ -91,22 +114,22 @@ export default function Dashboard() {
   };
 
   const [items, setItems] = useState([
-    // {
-    //   id: 1,
-    //   name: "Pen",
-    //   qty: 5,
-    //   rate: 5,
-    //   total: 25,
-    //   gst: 18,
-    // },
-    // {
-    //   id: 2,
-    //   name: "Book",
-    //   qty: 10,
-    //   rate: 20,
-    //   total: 200,
-    //   gst: 18,
-    // },
+    {
+      id: 1,
+      name: "Pen",
+      qty: 5,
+      rate: 5,
+      total: 25,
+      gst: 18,
+    },
+    {
+      id: 2,
+      name: "Book",
+      qty: 10,
+      rate: 20,
+      total: 200,
+      gst: 18,
+    },
   ]);
 
   const [imgSRC, setImgSRC] = useState(
@@ -118,7 +141,7 @@ export default function Dashboard() {
   const [getFileClick, setGetFileClick] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const fileRef = React.createRef();
+  const fileRef = createRef();
 
   const handleSendData = () => {
     console.log(items);
@@ -142,11 +165,13 @@ export default function Dashboard() {
       !TotalWithGST ||
       !GSTTotal
     ) {
-      alert("Please fill all the fields");
+      setDialogBox({ ...dialogBox, isDialogOpen: true });
+      // alert("Please fill all the fields");
       return;
     }
 
     try {
+      handleOpenLoader();
       const invoicesRef = db.collection("invoices");
       const invoiceRef = invoicesRef.doc(userUniqueID);
       const dataRef = invoiceRef.collection("invoicesList");
@@ -168,6 +193,7 @@ export default function Dashboard() {
           // });
           setProgress(0);
           console.log("Data added to subcollection successfully");
+          handleCloseLoader();
         });
     } catch (error) {
       console.error(
@@ -239,6 +265,7 @@ export default function Dashboard() {
     handlePriceChange();
 
     if (!userUniqueID) {
+      handleOpenLoader();
       db.collection("invoices")
         .where("userName", "==", currentUser.email)
         .get()
@@ -246,30 +273,75 @@ export default function Dashboard() {
           querySnapshot.forEach(function (doc) {
             console.log("Document data:", doc.data());
             setUserUniqueID(doc.id);
-            // ---------------
-            // setProfile({
-            //   ...profile,
-            //   emailAddress: currentUser.email,
-            //   sellerName: currentUser.displayName,
-            //   ...doc.data(),
-            // });
-            // setImage(doc.data().userImage);
+            setFrom(() => ({
+              ...from,
+              email: doc.data().emailAddress,
+              name: doc.data().companyName,
+              address: doc.data().companyAddress,
+              extra: doc.data().companyExtraInfo,
+            }));
           });
+          setToastMessageInfo({
+            message: "Data has been fetched successfully.",
+            category: "SUCCESS",
+            time: new Date().getUTCSeconds(),
+          });
+          handleCloseLoader();
         })
         .catch(function (error) {
+          setToastMessageInfo({
+            message: "Data has been fetched successfully.",
+            category: "SUCCESS",
+            time: new Date().getUTCSeconds(),
+          });
           console.log("Error getting documents: ", error);
         });
     }
+    // ////////////////////////////
 
     return () => {
       handleGSTChange();
       handlePriceChange();
       console.log(getFileClick);
     };
-  }, [items]);
+  }, [items, from]);
 
+  const [openLoader, setOpenLoader] = useState(false);
+  const handleCloseLoader = () => {
+    setOpenLoader(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenLoader(true);
+  };
+
+  // const [dialogBoxAction, setDialogBoxAction] = useState(null);
+  const [dialogBox, setDialogBox] = useState({
+    action: null,
+    isDialogOpen: false,
+  });
+
+  useEffect(() => {
+    console.log("dialogBox.action-> " + dialogBox.action);
+  }, [dialogBox]);
+
+  const [toastMessage, setToastMessageInfo] = useState(null);
   return (
     <>
+      <AlertDialogSlide
+        {...dialogBox}
+        dialogBox={dialogBox}
+        setDialogBox={setDialogBox}
+      />
+      <CustomizedSnackbars {...toastMessage} />
+
+      {/* <Button onClick={handleOpenLoader}>Show backdrop</Button> */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openLoader}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <div className="border-t-8 border-gray-700 h-2"></div>
 
       <div

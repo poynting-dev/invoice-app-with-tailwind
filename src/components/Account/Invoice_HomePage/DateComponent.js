@@ -16,7 +16,7 @@ export const InvoiceDate = ({
       <span className="mr-4 inline-block hidden md:block">:</span>
       <div className="flex-1">
         <input
-          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-48 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 js-datepicker"
+          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 js-datepicker"
           type="text"
           id="datepicker1"
           placeholder="eg. 17 Feb, 2020"
@@ -53,7 +53,7 @@ export const DueDate = ({ dueDate, setDueDate, isOpen2, setIsOpen2 }) => {
         <span className="mr-4 inline-block hidden md:block">:</span>
         <div className="flex-1">
           <input
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-48 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 js-datepicker"
+            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 js-datepicker"
             type="text"
             id="datepicker1"
             placeholder="eg. 17 Feb, 2020"

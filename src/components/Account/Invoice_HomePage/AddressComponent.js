@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import { db } from "../../../firebase";
+import { useAuth } from "../../../contexts/AuthContext";
+
 export const AddressComponent = ({ billing, from, setBilling, setFrom }) => {
   const handleBillAddressChange = (e) => {
     let updatedValue = {};
@@ -17,6 +21,33 @@ export const AddressComponent = ({ billing, from, setBilling, setFrom }) => {
     }));
   };
 
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    // ////////////////////////////
+    db.collection("invoices")
+      .where("userName", "==", currentUser.email)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          console.log("Document data:", doc.data());
+          //setID(doc.id);
+          // ---------------
+          // setProfile({
+          //   ...profile,
+          //   emailAddress: currentUser.email,
+          //   sellerName: currentUser.displayName,
+          //   ...doc.data(),
+          // });
+          // setImage(doc.data().userImage);
+        });
+      })
+      .catch(function (error) {
+        console.log("Error getting documents: ", error);
+      });
+    // ////////////////////////////
+  }, []);
+
   return (
     <div className="flex flex-wrap justify-between mb-8">
       <div className="w-full md:w-1/3 mb-2 md:mb-0">
@@ -26,8 +57,17 @@ export const AddressComponent = ({ billing, from, setBilling, setFrom }) => {
         <input
           className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
           id="inline-full-name"
+          type="email"
+          placeholder="Email Address"
+          name="email"
+          value={billing.email}
+          onChange={(e) => handleBillAddressChange(e)}
+        />
+        <input
+          className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+          id="inline-full-name"
           type="text"
-          placeholder="Billing company name"
+          placeholder="Name"
           name="name"
           value={billing.name}
           onChange={(e) => handleBillAddressChange(e)}
@@ -36,7 +76,7 @@ export const AddressComponent = ({ billing, from, setBilling, setFrom }) => {
           className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
           id="inline-full-name"
           type="text"
-          placeholder="Billing company address"
+          placeholder="Address"
           name="address"
           value={billing.address}
           onChange={(e) => handleBillAddressChange(e)}
@@ -58,13 +98,21 @@ export const AddressComponent = ({ billing, from, setBilling, setFrom }) => {
         <input
           className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
           id="inline-full-name"
+          type="email"
+          name="email"
+          value={from.email}
+          placeholder="Email Address"
+          onChange={(e) => handleFromAddressChange(e)}
+        />
+        <input
+          className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+          id="inline-full-name"
           type="text"
           name="name"
           value={from.name}
           placeholder="Your company name"
           onChange={(e) => handleFromAddressChange(e)}
         />
-
         <input
           className="mb-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
           id="inline-full-name"

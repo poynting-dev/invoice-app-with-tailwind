@@ -16,11 +16,12 @@ import Button from "@mui/material/Button";
 import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
+import CustomizedSnackbars from "../CustomizedSnackbars";
 
 export default function ManageProfile() {
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
-  const timer = React.useRef();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = useRef();
 
   const buttonSx = {
     ...(success && {
@@ -184,8 +185,18 @@ export default function ManageProfile() {
           });
           setImage(doc.data().userImage);
         });
+        setToastMessageInfo({
+          message: "Data has been fetched successfully.",
+          category: "SUCCESS",
+          time: new Date().getUTCSeconds(),
+        });
       })
       .catch(function (error) {
+        setToastMessageInfo({
+          message: "Data has been fetched successfully.",
+          category: "SUCCESS",
+          time: new Date().getUTCSeconds(),
+        });
         console.log("Error getting documents: ", error);
       });
 
@@ -194,6 +205,7 @@ export default function ManageProfile() {
     };
   }, []);
 
+  const [toastMessage, setToastMessageInfo] = useState(null);
   const updateSellerProfileOlder = () => {
     const isEmpty = Object.values(profile).some((val) => val === "");
 
@@ -224,6 +236,7 @@ export default function ManageProfile() {
   };
   return (
     <div className="mb-24">
+      <CustomizedSnackbars {...toastMessage} />
       <div className="container">
         <h2>Edit your Info.</h2>
 
@@ -237,175 +250,182 @@ export default function ManageProfile() {
             />
           ))}
         </div> */}
-
-        <div className="relative z-0 mb-6 w-full group">
-          <input
-            type="email"
-            name="emailAddress"
-            id="userEmail"
-            className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            value={profile.emailAddress}
-            // onChange={(e) => handleChange(e)}
-            required
-          />
-          <label
-            htmlFor="emailAddress"
-            className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        <div className="flex space-x-4">
+          {/* -------------------------------Image Uploader--------------- */}
+          <div
+            className="w-60 h-60"
+            // style={{ height: "120px", width: "120px", zIndex: "1001" }}
           >
-            Email address
-          </label>
-        </div>
+            <img
+              className="rounded-md w-100 h-100 shadow-md cursor-pointer"
+              alt="User Pic"
+              src={
+                image == null
+                  ? "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png"
+                  : image
+              }
+              id="profile-image1"
+              height="200"
+              onClick={handleImageClick}
+            />
+            <input
+              ref={imageRef}
+              id="profile-image-upload"
+              className="hidden"
+              type="file"
+              name="userImage"
+              onChange={(e) => (handleImageChange(e), handleImageUpload(e))}
+            />
+            <div style={{ color: "#999" }}> </div>
+          </div>
+          {/* -------------------------------Image Uploader--------------- */}
+          <div className="w-75">
+            <div className="relative z-0 mb-6 w-full group">
+              <input
+                type="email"
+                name="emailAddress"
+                id="userEmail"
+                className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                value={profile.emailAddress}
+                // onChange={(e) => handleChange(e)}
+                required
+              />
+              <label
+                htmlFor="emailAddress"
+                className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >
+                Email address
+              </label>
+            </div>
 
-        <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative z-0 mb-6 w-full group">
-            <input
-              type="text"
-              name="sellerName"
-              id="sellerName"
-              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              value={profile.sellerName}
-              placeholder=" "
-              onChange={(e) => handleChange(e)}
-              required
-            />
-            <label
-              htmlFor="sellerName"
-              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Your Name
-            </label>
-          </div>
-          <div className="relative z-0 mb-6 w-full group">
-            <input
-              type="number"
-              name="phoneNumber"
-              id="phoneNumber"
-              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              value={profile.phoneNumber}
-              placeholder=" "
-              onChange={(e) => handleChange(e)}
-              required
-            />
-            <label
-              htmlFor="phoneNumber"
-              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Your Contact No.
-            </label>
-          </div>
+            <div className="grid md:grid-cols-2 md:gap-6">
+              <div className="relative z-0 mb-6 w-full group">
+                <input
+                  type="text"
+                  name="sellerName"
+                  id="sellerName"
+                  className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  value={profile.sellerName}
+                  placeholder=" "
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                <label
+                  htmlFor="sellerName"
+                  className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Your Name
+                </label>
+              </div>
+              <div className="relative z-0 mb-6 w-full group">
+                <input
+                  type="number"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  value={profile.phoneNumber}
+                  placeholder=" "
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                <label
+                  htmlFor="phoneNumber"
+                  className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Your Contact No.
+                </label>
+              </div>
 
-          <div className="relative z-0 mb-6 w-full group">
-            <input
-              type="text"
-              name="companyName"
-              id="companyName"
-              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              value={profile.companyName}
-              onChange={(e) => handleChange(e)}
-              required
-            />
-            <label
-              htmlFor="companyName"
-              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Company Name
-            </label>
-          </div>
+              <div className="relative z-0 mb-6 w-full group">
+                <input
+                  type="text"
+                  name="companyName"
+                  id="companyName"
+                  className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  value={profile.companyName}
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                <label
+                  htmlFor="companyName"
+                  className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Company Name
+                </label>
+              </div>
 
-          <div className="relative z-0 mb-6 w-full group">
-            <input
-              type="text"
-              name="companyAddress"
-              id="companyAddress"
-              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              value={profile.companyAddress}
-              onChange={(e) => handleChange(e)}
-              required
-            />
-            <label
-              htmlFor="companyAddress"
-              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Company Address
-            </label>
-          </div>
+              <div className="relative z-0 mb-6 w-full group">
+                <input
+                  type="text"
+                  name="companyAddress"
+                  id="companyAddress"
+                  className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  value={profile.companyAddress}
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                <label
+                  htmlFor="companyAddress"
+                  className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Company Address
+                </label>
+              </div>
 
-          <div className="relative z-0 mb-6 w-full group">
-            <input
-              type="text"
-              name="companyExtraInfo"
-              id="companyExtraInfo"
-              className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              value={profile.companyExtraInfo}
-              onChange={(e) => handleChange(e)}
-              required
-            />
-            <label
-              htmlFor="companyExtraInfo"
-              className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Extra Info
-            </label>
-          </div>
-        </div>
-        {/* <RoundedCircleImageUploader
+              <div className="relative z-0 mb-6 w-full group">
+                <input
+                  type="text"
+                  name="companyExtraInfo"
+                  id="companyExtraInfo"
+                  className="block py-2.5 px-0 w-full text-gray-900 bg-transparent border-1 border-b-2 border-gray-300 appearance-none border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  value={profile.companyExtraInfo}
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                <label
+                  htmlFor="companyExtraInfo"
+                  className="peer-focus:font-medium absolute text-gray-500 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Extra Info
+                </label>
+              </div>
+            </div>
+            {/* <RoundedCircleImageUploader
           handleImageUpload={handleImageUpload}
           profile={profile}
         /> */}
-        {/* -------------------------------Image Uploader--------------- */}
-        <div className="profile-pic">
-          <img
-            className="rounded-md w-100 h-100 shadow-md cursor-pointer"
-            alt="User Pic"
-            src={
-              image == null
-                ? "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png"
-                : image
-            }
-            id="profile-image1"
-            height="200"
-            onClick={handleImageClick}
-          />
-          <input
-            ref={imageRef}
-            id="profile-image-upload"
-            className="hidden"
-            type="file"
-            name="userImage"
-            onChange={(e) => (handleImageChange(e), handleImageUpload(e))}
-          />
-          <div style={{ color: "#999" }}> </div>
+
+            <button
+              style={{ display: "flex", alignItems: "center" }}
+              disabled={loading}
+            >
+              <button
+                className="snip1547"
+                onClick={updateSellerProfile}
+                style={{ margin: 1, position: "relative" }}
+              >
+                <span style={{ padding: "10px 20px" }}>Submit</span>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: grey[900],
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                )}
+              </button>
+            </button>
+          </div>
         </div>
-        {/* -------------------------------Image Uploader--------------- */}
-        <button
-          style={{ display: "flex", alignItems: "center" }}
-          disabled={loading}
-        >
-          <button
-            className="snip1547"
-            onClick={updateSellerProfile}
-            style={{ margin: 1, position: "relative" }}
-          >
-            <span style={{ padding: "10px 20px" }}>Submit</span>
-            {loading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: grey[900],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </button>
-        </button>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const userProfile = (state = {}, action) => {
 const userUniqueID = (state = null, action) => {
   switch (action.type) {
     case "SET_USER_ID": {
-      console.log("option1");
+      console.log("User ID has been setted");
       return action.id;
     }
     case "RESET_USER_ID": {
@@ -39,7 +39,7 @@ const userUniqueID = (state = null, action) => {
       return null;
     }
     default: {
-      console.log("option2");
+      console.log("default");
       return state;
     }
   }

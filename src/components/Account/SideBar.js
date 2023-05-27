@@ -25,14 +25,15 @@ export default function SideBar({ content }) {
     try {
       await logout();
       dispatch(resetUserUniqueID());
-      navigate("/login");
+      // navigate("/login");
+      window.location.reload(); // Force refresh the page
     } catch {
       // setError("Failed to log out");
     }
   }
   return (
     <>
-      <div className="sm:flex antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+      <div className="sm:flex antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light min-h-screen">
         {/* <!-- Sidebar --> */}
 
         <div className="flex flex-shrink-0 transition-all">
@@ -280,7 +281,7 @@ export default function SideBar({ content }) {
                 />
                 <span className="sr-only">User menu</span>
               </button>
-              {isOpen && (
+              {
                 <div
                   // @click.away="isOpen = false"
                   // @keydown.escape="isOpen = false"
@@ -315,7 +316,7 @@ export default function SideBar({ content }) {
                     Sign out
                   </a>
                 </div>
-              )}
+              }
             </div>
           </nav>
 
@@ -639,7 +640,7 @@ export default function SideBar({ content }) {
           //   x-transition:leave="transform transition-transform duration-300"
           //   x-transition:leave-start="translate-x-0"
           //   x-transition:leave-end="translate-x-full"
-          className="fixed inset-y-0 right-0 w-64 bg-white border-l border-indigo-100 rounded-l-3xl"
+          className="fixed inset-y-0 right-0 w-64 bg-white border-l border-indigo-100 rounded-l-3xl min-w-min"
         >
           <div className="px-4 py-8">
             <h2 className="text-lg font-semibold">Profile</h2>

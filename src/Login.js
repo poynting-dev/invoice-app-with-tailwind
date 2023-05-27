@@ -24,10 +24,10 @@ export default function Login() {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      if (userUniqueID == null) {
-        dispatch(actionCreators.setUniqueUserID("qYAhBXVsV3yQCWShsUHd"));
-        console.log("called");
-      }
+      // if (userUniqueID == null) {
+      //   dispatch(actionCreators.setUniqueUserID("qYAhBXVsV3yQCWShsUHd"));
+      //   console.log("called");
+      // }
       navigate("/");
     } catch {
       setError("Failed to log in");
@@ -322,7 +322,7 @@ export default function Login() {
           <p>
             I recently released Treact, a{" "}
             <span className="font-bold">free</span> TailwindCSS Component Kit
-            built with React.
+            built with
           </p>
           <p className="mt-2">
             It has 52 different UI components, 7 landing pages, and 8 inner
