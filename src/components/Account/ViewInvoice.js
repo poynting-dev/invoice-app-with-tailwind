@@ -242,6 +242,7 @@ export default function ViewInvoice() {
         fromAddress: from.address,
         fromExtra: from.extra,
       })
+
       .then(
         (result) => {
           console.log(result.text);
