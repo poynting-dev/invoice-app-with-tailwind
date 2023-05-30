@@ -17,6 +17,7 @@ import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 import CustomizedSnackbars from "../CustomizedSnackbars";
+import { Backdrop } from "@mui/material";
 
 export default function ManageProfile() {
   const [loading, setLoading] = useState(false);
@@ -167,8 +168,17 @@ export default function ManageProfile() {
     }
   };
 
+  const [openLoader, setOpenLoader] = useState(false);
+  const handleCloseLoader = () => {
+    setOpenLoader(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenLoader(true);
+  };
+
   useEffect(() => {
     // console.log(currentUser.email);
+    handleOpenLoader();
     db.collection("invoices")
       .where("userName", "==", currentUser.email)
       .get()
@@ -190,11 +200,12 @@ export default function ManageProfile() {
           category: "SUCCESS",
           time: new Date().getUTCSeconds(),
         });
+        handleCloseLoader();
       })
       .catch(function (error) {
         setToastMessageInfo({
-          message: "Data has been fetched successfully.",
-          category: "SUCCESS",
+          message: "Data fetching is having issues.",
+          category: "ERROR",
           time: new Date().getUTCSeconds(),
         });
         console.log("Error getting documents: ", error);
@@ -237,6 +248,12 @@ export default function ManageProfile() {
   return (
     <div className="mb-24">
       <CustomizedSnackbars {...toastMessage} />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openLoader}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="container">
         <h2>Edit your Info.</h2>
 

@@ -30,6 +30,8 @@ import convertDateToString from "../convertDateToString";
 import CustomizedSnackbars from "../CustomizedSnackbars";
 import { useRef } from "react";
 import { useMemo } from "react";
+import { Button } from "react-bootstrap";
+import ExportDataToExcel from "./ExportDataToExcel";
 
 const PAGE_SIZE = 5;
 
@@ -468,6 +470,9 @@ function InvoiceList() {
       {showLoader ? <LoaderType1 /> : ""}
       <div className="md:flex md:justify-between">
         <ComposeButton />
+        <Button>
+          <ExportDataToExcel invoices={invoices} />
+        </Button>
         <h1 className="text-3xl mb-2 items-end flex place-content-center">
           Your orders
         </h1>

@@ -16,10 +16,10 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide({
   isDialogOpen,
-  dialogBox,
+  // dialogBox,
   setDialogBox,
 }) {
-  const [open, setOpen] = useState(isDialogOpen);
+  // const [open, setOpen] = useState(isDialogOpen);
 
   // const handleClickOpen = () => {
   //   setOpen(true);
@@ -29,7 +29,7 @@ export default function AlertDialogSlide({
     //action - yes or no
     setDialogBox({ isDialogOpen: false, action: action });
     // setOpen(false);
-    console.log(JSON.stringify(action));
+    // console.log(JSON.stringify(action));
   };
 
   // useEffect(() => {

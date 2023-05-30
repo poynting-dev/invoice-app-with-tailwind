@@ -19,6 +19,7 @@ import InvoiceList from "./components/Account/InvoiceList";
 import ViewInvoice from "./components/Account/ViewInvoice";
 import SideBar from "./components/Account/SideBar";
 import ManageProfile from "./components/Account/ManageProfile";
+import ExportDataToExcel from "./components/Account/ExportDataToExcel";
 
 function App() {
   return (
@@ -36,6 +37,11 @@ function App() {
                 exact
                 path="/"
                 element={<SideBar content={<InvoiceList />} />}
+              />
+              <Route
+                exact
+                path="/exportdata"
+                element={<SideBar content={<ExportDataToExcel />} />}
               />
               <Route
                 path="/view/:id"

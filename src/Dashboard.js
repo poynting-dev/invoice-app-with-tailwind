@@ -10,7 +10,7 @@ import { db, storage } from "./firebase";
 import Profile from "./components/Account/Profile";
 import "alpinejs";
 
-import "daisyui";
+// import "daisyui";
 import {
   DueDate,
   InvoiceDate,
@@ -165,44 +165,57 @@ export default function Dashboard() {
       !TotalWithGST ||
       !GSTTotal
     ) {
-      setDialogBox({ ...dialogBox, isDialogOpen: true });
-      // alert("Please fill all the fields");
+      alert("Please fill all the fields");
       return;
     }
 
-    try {
-      handleOpenLoader();
-      const invoicesRef = db.collection("invoices");
-      const invoiceRef = invoicesRef.doc(userUniqueID);
-      const dataRef = invoiceRef.collection("invoicesList");
+    // setDialogBox({ ...dialogBox, isDialogOpen: true });
 
-      dataRef
-        .add({
-          invoiceNo: Math.random().toString().substr(2, 6),
-          items: items,
-          billing: billing,
-          from: from,
-          invoiceDate: Timestamp.fromDate(new Date(invoiceDate)),
-          dueDate: Timestamp.fromDate(new Date(dueDate)),
-          TotalWithGST: TotalWithGST,
-          GSTTotal: GSTTotal,
-        })
-        .then(() => {
-          // toast("Article added successfully", {
-          //   type: "success",
-          // });
-          setProgress(0);
-          console.log("Data added to subcollection successfully");
-          handleCloseLoader();
+    if (dialogBox.action === "YES") {
+      try {
+        handleOpenLoader();
+        const invoicesRef = db.collection("invoices");
+        const invoiceRef = invoicesRef.doc(userUniqueID);
+        const dataRef = invoiceRef.collection("invoicesList");
+
+        dataRef
+          .add({
+            invoiceNo: Math.random().toString().substr(2, 6),
+            items: items,
+            billing: billing,
+            from: from,
+            invoiceDate: Timestamp.fromDate(new Date(invoiceDate)),
+            dueDate: Timestamp.fromDate(new Date(dueDate)),
+            TotalWithGST: TotalWithGST,
+            GSTTotal: GSTTotal,
+          })
+          .then(() => {
+            // toast("Article added successfully", {
+            //   type: "success",
+            // });
+            setProgress(0);
+            setToastMessageInfo({
+              message: "Invoice has been added successfully.",
+              category: "SUCCESS",
+              time: new Date().getUTCSeconds(),
+            });
+            console.log("Data added to subcollection successfully");
+            handleCloseLoader();
+          });
+      } catch (error) {
+        setToastMessageInfo({
+          message: "Error adding data to subcollection to Database.",
+          category: "ERROR",
+          time: new Date().getUTCSeconds(),
         });
-    } catch (error) {
-      console.error(
-        "Subcollection ID: " +
-          userUniqueID +
-          "<br/>" +
-          "Error adding data to subcollection: ",
-        error
-      );
+        console.error(
+          "Subcollection ID: " +
+            userUniqueID +
+            "<br/>" +
+            "Error adding data to subcollection: ",
+          error
+        );
+      }
     }
     // -------------------------------
     // const storageRef = ref(
@@ -290,8 +303,8 @@ export default function Dashboard() {
         })
         .catch(function (error) {
           setToastMessageInfo({
-            message: "Data has been fetched successfully.",
-            category: "SUCCESS",
+            message: "Error getting documents.",
+            category: "ERROR",
             time: new Date().getUTCSeconds(),
           });
           console.log("Error getting documents: ", error);
@@ -306,6 +319,7 @@ export default function Dashboard() {
     };
   }, [items, from]);
 
+  //Circle Loader---------------------------------------
   const [openLoader, setOpenLoader] = useState(false);
   const handleCloseLoader = () => {
     setOpenLoader(false);
@@ -313,6 +327,7 @@ export default function Dashboard() {
   const handleOpenLoader = () => {
     setOpenLoader(true);
   };
+  //Circle Loader---------------------------------------
 
   // const [dialogBoxAction, setDialogBoxAction] = useState(null);
   const [dialogBox, setDialogBox] = useState({
@@ -322,14 +337,18 @@ export default function Dashboard() {
 
   useEffect(() => {
     console.log("dialogBox.action-> " + dialogBox.action);
-  }, [dialogBox]);
+
+    if (dialogBox.action === "YES") {
+      handleSendData();
+    }
+  }, [dialogBox.action]);
 
   const [toastMessage, setToastMessageInfo] = useState(null);
   return (
     <>
       <AlertDialogSlide
         {...dialogBox}
-        dialogBox={dialogBox}
+        // dialogBox={dialogBox}
         setDialogBox={setDialogBox}
       />
       <CustomizedSnackbars {...toastMessage} />
@@ -390,7 +409,10 @@ export default function Dashboard() {
               >
                 <img
                   src="https://img.icons8.com/fluency/96/000000/filled-sent.png"
-                  onClick={handleSendData}
+                  // onClick={handleSendData}
+                  onClick={() =>
+                    setDialogBox({ ...dialogBox, isDialogOpen: true })
+                  }
                 />
               </div>
               {/* <div
@@ -816,9 +838,11 @@ const Modal = ({
   const [newTotal, setTotal] = useState(0);
 
   const handleModalItemValueChange = (e) => {
+    let { value } = e.target;
+    value = value.replace(/^0+(?=\d)/, ""); // Remove leading zeros
     let updatedValue = {};
     updatedValue = {
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     };
     setSingleItem((val) => ({
       ...val,
@@ -867,7 +891,7 @@ const Modal = ({
     setTotal(parseFloat(singleItem.qty) * parseFloat(singleItem.rate));
     let updatedValue = {};
     updatedValue = {
-      total: newTotal,
+      total: newTotal === NaN ? 0 : newTotal,
     };
 
     singleItem.total = newTotal;
